@@ -12,8 +12,8 @@
  * rates: x/ century
  */
 
-// TODO: a lot
-const kep_mean_elements = {
+// TODO: a lot rename and shit
+export const meanElements = {
 	/*reference_epoch: J2000,*/
 	validInterval: {
 		from: new Date('1800-01-01T00:00:00'),

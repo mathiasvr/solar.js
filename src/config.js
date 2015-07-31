@@ -15,6 +15,9 @@ System.config({
 
 System.config({
   "meta": {
+/*    "*": {
+      "format": "es6"
+    },*/
     "github:mrdoob/three.js@master/build/three": {
       "format": "global"
     },

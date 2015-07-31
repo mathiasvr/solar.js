@@ -1,5 +1,6 @@
 {
   "name": "Solar-thing",
+  "version": "0.1",
   "jspm": {
     "format": "es6",
     "directories": {

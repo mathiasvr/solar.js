@@ -1,15 +1,35 @@
-'use strict'; // TODO: this should be automated by bable ????
+import 'three.js';
 
-import OrbitalElements from '../orbitalClass';
+import OrbitalElements from '../position/orbitalClass';
+import {meanElements} from '../position/orbital-elements-data';
+
+import {CelestialBody, Stars} from './planet';
 
 // testing
-let mars = {
-	name: 'Mars',
-	elements: { a: 1.52371034, e: 0.09339410, i: 1.84969142, L: -4.55343205, wl: -23.94362959, N: 49.55953891 },
-	rates: { a: 0.00001847, e: 0.00007882, i: -0.00813131, L: 19140.30268499, wl: 0.44441088, N: -0.29257343 }
-};
 
-// first
+export function getMars() { 
+	let datetime = new Date('1997-06-21T00:00:00');
+
+	let mars = new CelestialBody(40, 0xff0000, meanElements.mars);
+	mars.setPositionFromEpoch(datetime);
+
+	console.log('mars-pos', mars.position);
+	return mars
+}
+
+export function getEarth() { 
+	let datetime = new Date('1997-06-21T00:00:00');
+
+	let earth = new CelestialBody(50, 0x0000ff, meanElements.earth);
+	earth.setPositionFromEpoch(datetime);
+
+	console.log('earth-pos', earth.position);
+	return earth
+}
+
+
+
+/*// first
 console.time('pos1');
 var orbel = new OrbitalElements(mars);
 console.timeEnd('pos1');
@@ -30,4 +50,4 @@ for (var i = 0; i < 1000; i++) {
 
 console.timeEnd('1000 pos');
 
-console.log(orbel);
+console.log(orbel);*/

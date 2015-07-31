@@ -7,7 +7,7 @@
 import 'three.js';
 import "github:mrdoob/three.js@master/examples/js/controls/OrbitControls";
 
-import {Planet, Stars} from './three/planet';
+import {CelestialBody, Stars} from './three/planet';
 
 // TODO: i hate consts
 var DEBUG_ROTATION = false;
@@ -65,8 +65,8 @@ var cube = new THREE.Mesh(cubeGeometry, material);
 scene.add(cube);
   
 // create spheres
-var sphere = new Planet(100, 0x0000ff); 
-var sphere2 = new Planet(50, 0xff0000); 
+var sphere = new CelestialBody(100, 0x0000ff); 
+var sphere2 = new CelestialBody(50, 0xff0000); 
 scene.add(sphere, sphere2);
 
 // add a bunch of star particles

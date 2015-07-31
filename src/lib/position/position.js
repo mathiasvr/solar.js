@@ -6,7 +6,7 @@
 
 
 // heliocentric coordinates in the orbital plane
-function calculateOrbitalPosition(a, e, E) {
+export function calculateOrbitalPosition(a, e, E) {
 	return {
 		x: a * (Math.cos(E) - e),
 		y: a * Math.sqrt(1 - e * e) * Math.sin(E),
@@ -17,7 +17,7 @@ function calculateOrbitalPosition(a, e, E) {
 // position it the helicentric eccliptic plane
 //TODO: this can be done in many ways... choose 
 // TEST IN AFTER EDITS
-function calculateEcclipticPosition(N, i, w, opos) {
+export function calculateEcclipticPosition(N, i, w, opos) {
 	return {
 		x: opos.x * (Math.cos(w) * Math.cos(N) - Math.sin(w) * Math.sin(N) * Math.cos(i))
 		+ opos.y * (- Math.sin(w) * Math.cos(N) - Math.cos(w) * Math.sin(N) * Math.cos(i)),

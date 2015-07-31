@@ -1,4 +1,4 @@
-'use strict'; // TODO: this should be automated by bable ????
+import * as Position from './position';
 
 function toEpoch(date) {
 	var epoch = date.getTime() / 1000;
@@ -25,41 +25,6 @@ var solveKepler = function (e, M) {
 		return x + (M + e * Math.sin(x) - x) / (1 - e * Math.cos(x));
 	};
 };
-
-// heliocentric coordinates in the orbital plane
-function calculateOrbitalPosition(a, e, E) {
-	return {
-		x: a * (Math.cos(E) - e),
-		y: a * Math.sqrt(1 - e * e) * Math.sin(E),
-		z: 0
-	}
-}
-
-// position it the helicentric eccliptic plane
-//TODO: this can be done in many ways... choose 
-// TEST IN AFTER EDITS
-function calculateEcclipticPosition(N, i, w, opos) {
-	return {
-		x: opos.x * (Math.cos(w) * Math.cos(N) - Math.sin(w) * Math.sin(N) * Math.cos(i))
-		+ opos.y * (- Math.sin(w) * Math.cos(N) - Math.cos(w) * Math.sin(N) * Math.cos(i)),
-		y: opos.x * (Math.cos(w) * Math.sin(N) + Math.sin(w) * Math.cos(N) * Math.cos(i))
-		+ opos.y * (- Math.sin(w) * Math.sin(N) + Math.cos(w) * Math.cos(N) * Math.cos(i)),
-		z: opos.x * (Math.sin(w) * Math.sin(i))
-		+ opos.y * (Math.cos(w) * Math.sin(i))
-	}
-	
-	/*let cN = Math.cos(N); let sN = Math.sin(N);
-	let ci = Math.cos(i); let si = Math.sin(i);
-	let cw = Math.cos(w); let sw = Math.sin(w);
-	
-	return {
-		x: opos.x * (cw * cN - sw * sN * ci) + opos.y * (- sw * cN - cw * sN * ci),
-		y: opos.x * (cw * sN + sw * cN * ci) + opos.y * (- sw * sN + cw * cN * ci),
-		z: opos.x * (sw * si) + opos.y * (cw * si)
-	}*/
-}
-
-
 
 // TODO: well
 const J2000 = new Date('2000-01-01T12:00:00-0000');
@@ -120,9 +85,9 @@ export default class OrbitalElements {
 		this.E = solveEccentricAnomaly(solveKepler(this.e, this.M), this.M, 6);
 		
 		// TODO: the structure need serious work
-		this.position = calculateOrbitalPosition(this.a, this.e, this.E);
+		this.position = Position.calculateOrbitalPosition(this.a, this.e, this.E);
 		
-		this.helposition = calculateEcclipticPosition(this.N, this.i, this.w, this.position);
+		this.helposition = Position.calculateEcclipticPosition(this.N, this.i, this.w, this.position);
 	}
 
 }
