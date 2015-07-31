@@ -13,7 +13,8 @@ export default class RenderCam { //todo rename
     this.debugCamera = new THREE.PerspectiveCamera(70, 0.5 * SCREEN_WIDTH / SCREEN_HEIGHT, 1, 10000);
     this.debugCamera.position.z = 2500;
 
-    this.camera = new THREE.PerspectiveCamera(50, 0.5 * SCREEN_WIDTH / SCREEN_HEIGHT, 1/*150*/, 1000);
+    this.camera = new THREE.PerspectiveCamera(50, 0.5 * SCREEN_WIDTH / SCREEN_HEIGHT, 50/*150*/, 1700);
+    this.camera.up.set(0,0,1);
 
     this.cameraHelper = new THREE.CameraHelper(this.camera);
 

@@ -43,9 +43,19 @@ controls.noPan = true;
 // scene.add(sphere, sphere2);
 
 // planet testing
-let testMars = testpos.getMars();
-let testEarth = testpos.getEarth();
-scene.add(testMars, testEarth);
+// let [testMercury, testVenus, testEarth, testMars] = testpos.getInnerPlanets();
+// scene.add(testMercury, testVenus, testEarth, testMars);
+
+// scene.add(testMercury.getOrbitLine(), testVenus.getOrbitLine(), testEarth.getOrbitLine(), testMars.getOrbitLine());
+
+// planet looping
+let planets = testpos.getPlanets();
+planets.pop();planets.pop();planets.pop(); planets.pop(); // todo hack pop outer planets
+for (let i = 0; i < planets.length; i++) {
+  scene.add(planets[i]);
+  scene.add(planets[i].getOrbitLine());
+}
+
 
 
 // add a bunch of star particles
@@ -78,11 +88,13 @@ Date.prototype.addDays = function (days) {
 
 // split
 
+let currentEpoch = new Date('1997-06-21T00:00:00');
+
 var halfFPShack = 0;
 function render() {
   requestAnimationFrame(render);
 
-  if (halfFPShack++ % 2 === 0) return;
+  if (halfFPShack++ % 4 !== 0) return;
   
   // TODO: WHY???
   //controls.update();
@@ -109,17 +121,29 @@ function render() {
   
   // test planet stuff
   
-  let epoch = testMars.epoch.addDays(1);
-  testMars.setPositionFromEpoch(epoch);
-  testEarth.setPositionFromEpoch(epoch);
+  currentEpoch = currentEpoch.addDays(2);
 
-  if (epoch.getDate() === 1)
-    console.log('epoch', epoch);
-    
+  // testMercury.setPositionFromEpoch(currentEpoch);
+  // testVenus.setPositionFromEpoch(currentEpoch);
+  // testMars.setPositionFromEpoch(currentEpoch);
+  // testEarth.setPositionFromEpoch(currentEpoch);
+  
+  for (let i = 0; i < planets.length; i++) {
+    planets[i].setPositionFromEpoch(currentEpoch);
+  }
+
+
+  if (currentEpoch.getDate() === 1)
+    console.log('epoch', currentEpoch);
+   
   // camera follows the cube
-  //rendercam.camera.lookAt(testMars.position);
+  rendercam.camera.lookAt(planets[2].position);
   
-  
+  // from earth test
+  // testEarth.visible = false;
+  // rendercam.camera.position.copy(testEarth.position);
+  // rendercam.camera.lookAt(testMercury.position);
+
   rendercam.render(scene);
 }
 
