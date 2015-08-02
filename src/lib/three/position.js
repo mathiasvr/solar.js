@@ -12,7 +12,7 @@ import {CelestialBody, Stars} from './planet';
 export function getMars() {
 	let datetime = new Date('1997-06-21T00:00:00');
 
-	let mars = new CelestialBody(meanElements.mars.eqradius, 0xff0000, meanElements.mars);
+	let mars = new CelestialBody(meanElements.mars.physical.eqradius, 0xff0000, meanElements.mars);
 	mars.setPositionFromEpoch(datetime);
 
 	console.log('mars-pos', mars.position);
@@ -22,7 +22,7 @@ export function getMars() {
 export function getEarth() {
 	let datetime = new Date('1997-06-21T00:00:00');
 
-	let earth = new CelestialBody(meanElements.earth.eqradius, 0x0000ff, meanElements.earth);
+	let earth = new CelestialBody(meanElements.earth.physical.eqradius, 0x0000ff, meanElements.earth);
 	earth.setPositionFromEpoch(datetime);
 
 	console.log('earth-pos', earth.position);
@@ -30,10 +30,10 @@ export function getEarth() {
 }
 
 export function getInnerPlanets() {
-	let mercury = new CelestialBody(meanElements.mercury.eqradius, 0x00ffff, meanElements.mercury);
-	let venus = new CelestialBody(meanElements.venus.eqradius, 0xffff00, meanElements.venus);
-	let earth = new CelestialBody(meanElements.earth.eqradius, 0x0000ff, meanElements.earth);
-	let mars = new CelestialBody(meanElements.mars.eqradius, 0xff0000, meanElements.mars);
+	let mercury = new CelestialBody(meanElements.mercury.physical.eqradius, 0x00ffff, meanElements.mercury);
+	let venus = new CelestialBody(meanElements.venus.physical.eqradius, 0xffff00, meanElements.venus);
+	let earth = new CelestialBody(meanElements.earth.physical.eqradius, 0x0000ff, meanElements.earth);
+	let mars = new CelestialBody(meanElements.mars.physical.eqradius, 0xff0000, meanElements.mars);
 
 	return [mercury, venus, earth, mars];
 }
@@ -44,7 +44,7 @@ export function getPlanets() {
 	let planets = [];
 	for (let property in meanElements) {
 		let planet = meanElements[property];
-		planets.push(new CelestialBody(planet.eqradius, planet.color, planet));
+		planets.push(new CelestialBody(planet.physical.eqradius, planet.color, planet));
 	}
 	return planets;
 }

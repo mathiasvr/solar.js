@@ -22,7 +22,7 @@ scene.add(rendercam.cameraHelper); // TODO: this might be a bit transparent
     
 document.body.appendChild(rendercam.renderer.domElement);
 
-rendercam.camera.position.z = 1; //TODO: for OrbitControls to work ??
+//rendercam.camera.position.z = 1; //TODO: for OrbitControls to work ??
 
 // set up camera control	
 var controls = new THREE.OrbitControls(rendercam.camera);
@@ -50,11 +50,25 @@ controls.noPan = true;
 
 // planet looping
 let planets = testpos.getPlanets();
-planets.pop();planets.pop();planets.pop(); planets.pop(); // todo hack pop outer planets
+planets.pop();planets.pop(); // todo hack pop outer planets
 for (let i = 0; i < planets.length; i++) {
   scene.add(planets[i]);
-  scene.add(planets[i].getOrbitLine());
+ // scene.add(planets[i].getOrbitLine());
 }
+//scene.add(planets[6].getOrbitLine());
+
+// add sunlight
+var light = new THREE.PointLight( 0xffffff, 1, 0);
+light.position.set( 1, 1, 1 );
+scene.add(light);
+
+// hemiLight, so it isn't all dark and shit
+// TODO: i have no idea how this works so...
+var hemiLight = new THREE.HemisphereLight( 0xffffff, 0xffffff, 0.3 );
+// hemiLight.color.setHSL( 0.6, 1, 0.6 );
+// hemiLight.groundColor.setHSL( 0.095, 1, 0.75 );
+hemiLight.position.set( 0, 0, 500);
+scene.add( hemiLight );
 
 
 
@@ -88,13 +102,13 @@ Date.prototype.addDays = function (days) {
 
 // split
 
-let currentEpoch = new Date('1997-06-21T00:00:00');
+let currentEpoch = new Date('1991-06-21T00:00:00');
 
 var halfFPShack = 0;
 function render() {
   requestAnimationFrame(render);
 
-  if (halfFPShack++ % 4 !== 0) return;
+  if (halfFPShack++ % 3 !== 0) return;
   
   // TODO: WHY???
   //controls.update();
@@ -121,7 +135,7 @@ function render() {
   
   // test planet stuff
   
-  currentEpoch = currentEpoch.addDays(2);
+  currentEpoch = currentEpoch.addDays(3);
 
   // testMercury.setPositionFromEpoch(currentEpoch);
   // testVenus.setPositionFromEpoch(currentEpoch);
@@ -137,12 +151,12 @@ function render() {
     console.log('epoch', currentEpoch);
    
   // camera follows the cube
-  rendercam.camera.lookAt(planets[2].position);
+  //rendercam.camera.lookAt(planets[2].position);
   
-  // from earth test
-  // testEarth.visible = false;
-  // rendercam.camera.position.copy(testEarth.position);
-  // rendercam.camera.lookAt(testMercury.position);
+  // from earth to mars test
+   // planets[2].visible = false;
+    rendercam.camera.position.copy(planets[2].position);
+    rendercam.camera.lookAt(planets[1].position);
 
   rendercam.render(scene);
 }

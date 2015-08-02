@@ -13,8 +13,9 @@ export default class RenderCam { //todo rename
     this.debugCamera = new THREE.PerspectiveCamera(70, 0.5 * SCREEN_WIDTH / SCREEN_HEIGHT, 1, 10000);
     this.debugCamera.position.z = 2500;
 
-    this.camera = new THREE.PerspectiveCamera(50, 0.5 * SCREEN_WIDTH / SCREEN_HEIGHT, 50/*150*/, 1700);
-    this.camera.up.set(0,0,1);
+    this.camera = new THREE.PerspectiveCamera(50, 0.5 * SCREEN_WIDTH / SCREEN_HEIGHT, 1/*150*/, 2500);
+    this.camera.up.set(0, 0, 1);// todo what is the rite way here
+    this.camera.position.z = 250; 
 
     this.cameraHelper = new THREE.CameraHelper(this.camera);
 
@@ -23,6 +24,10 @@ export default class RenderCam { //todo rename
     this.renderer.setPixelRatio(window.devicePixelRatio);
     this.renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
     this.renderer.autoClear = false;
+    
+    // TODO: investigate gamma correction
+		// this.renderer.gammaInput = true;
+		// this.renderer.gammaOutput = true;
 
     // resize events
     window.addEventListener('resize', () => {
