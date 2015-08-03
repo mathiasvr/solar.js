@@ -7,6 +7,7 @@
       "baseURL": "src"
     },
     "dependencies": {
+      "three-orbit-controls": "npm:three-orbit-controls@^69.0.5",
       "three.js": "github:mrdoob/three.js@master"
     },
     "devDependencies": {

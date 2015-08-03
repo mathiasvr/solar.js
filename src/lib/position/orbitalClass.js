@@ -33,61 +33,105 @@ const DAYS_PER_CENTURY = 365.25 * 100;
 const RAD2DEG = 180 / Math.PI;
 const DEG2RAD = Math.PI / 180;
 
-const mean = Symbol(); // TODO fuck this
+//OrbitalElements
+function compute(initialElements, epoch) {
+	let elements = {};
 
-export default class OrbitalElements {
+	elements.epoch = epoch; // TODO: epochify with method or getter or something
+		
+	// Number of centuries past J2000.0
+	// TODO initialElements.ref-epoch
+	let T = (toEpoch(epoch) - toEpoch(J2000)) / SECS_PER_DAY / DAYS_PER_CENTURY;
 
-	constructor(initialElements, epoch) {
-
-		this[mean] = initialElements; // TODO: consider naming
-
-		if (epoch /* is typeof date*/) {
-			this.setEpoch(epoch);
-		} else {
-			// TODO: set to ref (J2000)
-			this.setEpoch(J2000);
-		}
-
+	for (let key in initialElements.elements) {
+		elements[key] = initialElements.elements[key] + T * initialElements.rates[key];
 	}
 
-	// 1: compute keplerian elements for the given epoch 
-	setEpoch(epoch) {
-		this.epoch = epoch; // TODO: epochify with method or getter or something
-		
-		// Number of centuries past J2000.0
-		// todo initialElements.refepoch
-		let T = (toEpoch(epoch) - toEpoch(J2000)) / SECS_PER_DAY / DAYS_PER_CENTURY;
+	// convert degrees to radians
+	// TODO: maybe fix entire dataset, if precise enough, else prettify this
+	elements.i = elements.i * DEG2RAD;
+	elements.wl = elements.wl * DEG2RAD;
+	elements.N = elements.N * DEG2RAD;
+	elements.L = elements.L * DEG2RAD;
 
-		for (let key in this[mean].elements) {
-			this[key] = this[mean].elements[key] + T * this[mean].rates[key];
-		}
-
-		this._computeElements();
-	}
-
-	_computeElements() {
-		// convert degrees to radians
-		// TODO: maybe fix entire dataset, if precise enough, else prettify this
-		this.i = this.i * DEG2RAD;
-		this.wl = this.wl * DEG2RAD;
-		this.N = this.N * DEG2RAD;
-		this.L = this.L * DEG2RAD;
-
-		// argument of perigee (perihelion)
-		this.w = this.wl - this.N;
-		// mean anomaly
-		this.M = this.L - this.wl;
+	// argument of perigee (perihelion)
+	elements.w = elements.wl - elements.N;
+	// mean anomaly
+	elements.M = elements.L - elements.wl;
 		
-		//TODO modulus
-		this.w = this.w % (2 * Math.PI);
-		this.M = this.M % (2 * Math.PI);
-		
-		this.E = solveEccentricAnomaly(solveKepler(this.e, this.M), this.M, 6);
-		
-		// TODO: the structure need serious work
-		this.position = Position.calculateOrbitalPosition(this.a, this.e, this.E);
-		
-		this.helposition = Position.calculateEcclipticPosition(this.N, this.i, this.w, this.position);
-	}
+	//TODO modulus all or waht maybe in funcions whater test elements haha lol dont n
+	elements.w = elements.w % (2 * Math.PI);
+	elements.M = elements.M % (2 * Math.PI);
 
+	elements.E = solveEccentricAnomaly(solveKepler(elements.e, elements.M), elements.M, 6);
+		
+	// TODO: the structure need serious work
+	elements.position = Position.calculateOrbitalPosition(elements.a, elements.e, elements.E);
+
+	elements.helposition = Position.calculateEcclipticPosition(elements.N, elements.i, elements.w, elements.position);
+
+	return elements;
 }
+
+// TODO: is it better to just export all sep and do * thing
+export default {compute, J2000};
+
+// TODO: removed the class
+// const mean = Symbol(); // TODO fuck this
+
+// export default class OrbitalElements {
+
+// 	constructor(initialElements, epoch) {
+
+// 		this[mean] = initialElements; // TODO: consider naming
+
+// 		if (epoch /* is typeof date*/) {
+// 			this.setEpoch(epoch);
+// 		} else {
+// 			// TODO: set to ref (J2000)
+// 			this.setEpoch(J2000);
+// 		}
+
+// 	}
+
+// 	// 1: compute keplerian elements for the given epoch 
+// 	setEpoch(epoch) {
+// 		this.epoch = epoch; // TODO: epochify with method or getter or something
+		
+// 		// Number of centuries past J2000.0
+// 		// todo initialElements.refepoch
+// 		let T = (toEpoch(epoch) - toEpoch(J2000)) / SECS_PER_DAY / DAYS_PER_CENTURY;
+
+// 		for (let key in this[mean].elements) {
+// 			this[key] = this[mean].elements[key] + T * this[mean].rates[key];
+// 		}
+
+// 		this._computeElements();
+// 	}
+
+// 	_computeElements() {
+// 		// convert degrees to radians
+// 		// TODO: maybe fix entire dataset, if precise enough, else prettify this
+// 		this.i = this.i * DEG2RAD;
+// 		this.wl = this.wl * DEG2RAD;
+// 		this.N = this.N * DEG2RAD;
+// 		this.L = this.L * DEG2RAD;
+
+// 		// argument of perigee (perihelion)
+// 		this.w = this.wl - this.N;
+// 		// mean anomaly
+// 		this.M = this.L - this.wl;
+		
+// 		//TODO modulus
+// 		this.w = this.w % (2 * Math.PI);
+// 		this.M = this.M % (2 * Math.PI);
+		
+// 		this.E = solveEccentricAnomaly(solveKepler(this.e, this.M), this.M, 6);
+		
+// 		// TODO: the structure need serious work
+// 		this.position = Position.calculateOrbitalPosition(this.a, this.e, this.E);
+		
+// 		this.helposition = Position.calculateEcclipticPosition(this.N, this.i, this.w, this.position);
+// 	}
+
+// }

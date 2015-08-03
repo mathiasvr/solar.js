@@ -1,110 +1,79 @@
-// TODO: should we realy import three as a global?
-//  could create our own simplified orbit controls or just use mouse controls ?
-// we need zoom to act reverse anyway...
-//import THREE from 'three.js';
-/* global THREE */
-import 'three.js';
-import "github:mrdoob/three.js@master/examples/js/controls/OrbitControls";
+/// <reference path="../../../DefinitelyTyped/threejs/three.d.ts" />
+//TODO TYPINGS??
 
-import {CelestialBody, Stars} from './three/planet';
+import THREE from 'three.js';
+import OrbitControls from 'three-orbit-controls';
+// todo is this the way?
+THREE.OrbitControls = OrbitControls(THREE);
+
+import * as space from './three/space';
 import RenderCam from './three/rendercam';
 
 import * as testpos from './three/position';
 
-// create the scene
-var scene = new THREE.Scene();
 
+let scene, rendercam, planets;
 
-// setup renderer
-var rendercam = new RenderCam();
+function init() {
+  // create the scene
+  scene = new THREE.Scene();
 
-scene.add(rendercam.cameraHelper); // TODO: this might be a bit transparent
+  // setup renderer
+  rendercam = new RenderCam();
+
+  scene.add(rendercam.cameraHelper); // TODO: this might be a bit transparent
     
-document.body.appendChild(rendercam.renderer.domElement);
-
-//rendercam.camera.position.z = 1; //TODO: for OrbitControls to work ??
-
-// set up camera control	
-var controls = new THREE.OrbitControls(rendercam.camera);
-//controls.noZoom = true;
-controls.noPan = true;
-//controls.addEventListener( 'change', function(){console.log('con-ch')} );
+  document.body.appendChild(rendercam.renderer.domElement);
 
 
-// create cube
-// var cubeGeometry = new THREE.BoxGeometry(100, 100, 100);
-// var material = new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true });
-// var cube = new THREE.Mesh(cubeGeometry, material);
-// scene.add(cube);
+  // set up camera control	
+  let controls = new THREE.OrbitControls(rendercam.camera);
+  //controls.noZoom = true;
+  controls.noPan = true;
+  //controls.addEventListener( 'change', function(){console.log('con-ch')} );
+
+  // todo
+  planets = testpos.getPlanets();
   
-// create spheres
-// var sphere = new Planet(100, 0x0000ff); 
-// var sphere2 = new Planet(50, 0xff0000); 
-// scene.add(sphere, sphere2);
+  planets.pop(); planets.pop(); // todo hack pop outer planets
 
-// planet testing
-// let [testMercury, testVenus, testEarth, testMars] = testpos.getInnerPlanets();
-// scene.add(testMercury, testVenus, testEarth, testMars);
+  // add planets and orbit path
+  for (let planet of planets) {
+    scene.add(planet);
+    scene.add(planet.getOrbitLine());
+  }
+  
+  // add the good ol'sun
+  let sun = new space.Sun();
+  scene.add(sun);
 
-// scene.add(testMercury.getOrbitLine(), testVenus.getOrbitLine(), testEarth.getOrbitLine(), testMars.getOrbitLine());
+  // add some hemisphere light, so planets are not completely dark
+  // TODO: i have no idea how this works so...
+  let hemiLight = new THREE.HemisphereLight(0xffffff, 0xffffff, 0.3);
+  // hemiLight.color.setHSL( 0.6, 1, 0.6 );
+  // hemiLight.groundColor.setHSL( 0.095, 1, 0.75 );
+  hemiLight.position.set(0, 0, 500);
+  scene.add(hemiLight);
 
-// planet looping
-let planets = testpos.getPlanets();
-planets.pop();planets.pop(); // todo hack pop outer planets
-for (let i = 0; i < planets.length; i++) {
-  scene.add(planets[i]);
- // scene.add(planets[i].getOrbitLine());
+
+  // add a bunch of star particles
+  let particles = new space.Stars(10000, 2000, 0x888888/*0xcccccc*/);
+  scene.add(particles);
 }
-//scene.add(planets[6].getOrbitLine());
-
-// add sunlight
-var light = new THREE.PointLight( 0xffffff, 1, 0);
-light.position.set( 1, 1, 1 );
-scene.add(light);
-
-// hemiLight, so it isn't all dark and shit
-// TODO: i have no idea how this works so...
-var hemiLight = new THREE.HemisphereLight( 0xffffff, 0xffffff, 0.3 );
-// hemiLight.color.setHSL( 0.6, 1, 0.6 );
-// hemiLight.groundColor.setHSL( 0.095, 1, 0.75 );
-hemiLight.position.set( 0, 0, 500);
-scene.add( hemiLight );
-
-
-
-// add a bunch of star particles
-var particles = new Stars(10000, 2000, 0x888888/*0xcccccc*/);
-scene.add(particles);
-  
-// static orbit thing
-// var lineGeometry = new THREE.Geometry();
-
-// // TODO: better (exact) wrap-around + how to know how many turns is enough
-// for (var i = 0; i <= Math.PI * 4 + 0.1; i += 0.1) {
-//   let vertex = new THREE.Vector3();
-//   vertex.x = 500 * Math.cos(i);
-//   vertex.y = 500 * Math.sin(i);
-//   vertex.z = 500 * Math.sin(i * 0.5);
-//   lineGeometry.vertices.push(vertex);
-// }
-
-// var line = new THREE.Line(lineGeometry, new THREE.LineBasicMaterial({ color: 0xff0000 }));
-// scene.add(line);
 
 
 // TODO: remove (we need general solution anyway)
 Date.prototype.addDays = function (days) {
-  var dat = new Date(this.valueOf());
+  let dat = new Date(this.valueOf());
   dat.setDate(dat.getDate() + days);
   return dat;
 }
 
 
-// split
-
+// TODO: MOVE
 let currentEpoch = new Date('1991-06-21T00:00:00');
+let halfFPShack = 0;
 
-var halfFPShack = 0;
 function render() {
   requestAnimationFrame(render);
 
@@ -113,29 +82,9 @@ function render() {
   // TODO: WHY???
   //controls.update();
 
-  // cube.rotation.x += 0.05;
-  // cube.rotation.y += 0.05;
-
-  //  var r = Date.now() * 0.0005;
-  // // //console.log(Math.cos(r) + ' ' + Math.sin(r))
-
-  // cube.position.x = 700 * Math.cos(r);
-  // cube.position.y = 700 * Math.sin(r);
-  // cube.position.z = 700 * Math.sin(r);
-  
-  //console.log(cube.position);
-
-  // sphere.position.x = 500 * Math.cos(r * 0.5);
-  // sphere.position.y = 500 * Math.sin(r);
-  // sphere.position.z = 500 * Math.sin(r);
-
-  // sphere2.position.x = 500 * Math.cos(r);
-  // sphere2.position.y = 500 * Math.sin(r);
-  // sphere2.position.z = 500 * Math.sin(r * 0.5);
-  
   // test planet stuff
   
-  currentEpoch = currentEpoch.addDays(3);
+  currentEpoch = currentEpoch.addDays(2);
 
   // testMercury.setPositionFromEpoch(currentEpoch);
   // testVenus.setPositionFromEpoch(currentEpoch);
@@ -147,6 +96,7 @@ function render() {
   }
 
 
+  // todo log epoch
   if (currentEpoch.getDate() === 1)
     console.log('epoch', currentEpoch);
    
@@ -154,11 +104,13 @@ function render() {
   //rendercam.camera.lookAt(planets[2].position);
   
   // from earth to mars test
-   // planets[2].visible = false;
-    rendercam.camera.position.copy(planets[2].position);
-    rendercam.camera.lookAt(planets[1].position);
+  // planets[2].visible = false;
+  // rendercam.camera.position.copy(planets[2].position);
+  // rendercam.camera.lookAt(planets[1].position);
 
   rendercam.render(scene);
 }
 
+
+init();
 render();

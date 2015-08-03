@@ -14,26 +14,11 @@ System.config({
 });
 
 System.config({
-  "meta": {
-/*    "*": {
-      "format": "es6"
-    },*/
-    "github:mrdoob/three.js@master/build/three": {
-      "format": "global"
-    },
-    "github:mrdoob/three.js@master/examples/js/controls/OrbitControls": {
-      "deps": [
-        "three.js"
-      ]
-    }
-  }
-});
-
-System.config({
   "map": {
     "babel": "npm:babel-core@5.8.9",
     "babel-runtime": "npm:babel-runtime@5.8.9",
     "core-js": "npm:core-js@0.9.18",
+    "three-orbit-controls": "npm:three-orbit-controls@69.0.5",
     "three.js": "github:mrdoob/three.js@master",
     "github:jspm/nodelibs-process@0.1.1": {
       "process": "npm:process@0.10.1"

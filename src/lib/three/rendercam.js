@@ -1,11 +1,10 @@
-/* global THREE */
-import 'three.js';
+import THREE from 'three.js';
 
 // TODO: i hate consts
-var DEBUG_ROTATION = false;
+let DEBUG_ROTATION = false;
 
-var SCREEN_WIDTH = window.innerWidth;
-var SCREEN_HEIGHT = window.innerHeight;
+let SCREEN_WIDTH = window.innerWidth;
+let SCREEN_HEIGHT = window.innerHeight;
 
 export default class RenderCam { //todo rename
   
@@ -45,10 +44,9 @@ export default class RenderCam { //todo rename
   }
 
   render(scene) {
-    let r = Date.now() * 0.0005;
-    
     // rotate debug camera
     if (DEBUG_ROTATION) {
+      let r = Date.now() * 0.0005;
       this.debugCamera.position.x = 2500 * Math.cos(r * 0.1);
       this.debugCamera.position.z = 2500 * Math.sin(r * 0.1);
       //this.debugCamera.position.y = 700 * Math.sin(r);

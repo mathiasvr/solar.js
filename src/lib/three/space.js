@@ -1,55 +1,50 @@
-import 'three.js';
+import THREE from 'three.js';
+// TODO: maybe separate this from the mesh class (but then maybe not)
+import OrbitalElements from '../position/orbitalClass';
 
 // TODO: remove (we need general solution anyway)
 Date.prototype.addDays = function (days) {
-	var dat = new Date(this.valueOf());
+	let dat = new Date(this.valueOf());
 	dat.setDate(dat.getDate() + days);
 	return dat;
 }
 
-// TODO: maybe separate this from the mesh class (but then maybe not)
-import OrbitalElements from '../position/orbitalClass';
-
-const J2000 = new Date('2000-01-01T12:00:00-0000');//TODO remove
 const KM_PER_AU = 149597870.7;
 const SCALE = 100; // TODO: fix
+
 export class CelestialBody extends THREE.Mesh {
 	constructor(radius, color, meanElements) {
 
-		const size_scale = 500; // TODO: remove even more hacks
+		const size_scale = 1500; // TODO: remove even more hacks
 		radius = (radius * SCALE * size_scale) / KM_PER_AU; // TODO: less hacky
 		console.log(meanElements.name + ' radius: ' + radius);
 
 		super(new THREE.SphereGeometry(radius, 32, 24), new THREE.MeshPhongMaterial({ color: color, wireframe: false }));
 
 		this.planetData = meanElements;
-		this.color = color; // todo: can this be accessed from basic mesh or what do we do in the future anyway
 	}
 	
-	// TODO dont care for OE.setEpoch function (think we can remove it/refactor)
 	setPositionFromEpoch(epoch) {
 		this.epoch = epoch;
-		var elements = new OrbitalElements(this.planetData, epoch);
+		let elements = OrbitalElements.compute(this.planetData, epoch);
 
-		// TODO: map values more pretty
-		// and dont multiply (make scene adapt if that works)
-		//return new THREE.Vector3(elements.helposition.x, elements.helposition.y, elements.helposition.z);
-		this.position.set(
-			elements.helposition.x * SCALE,
-			elements.helposition.y * SCALE,
-			elements.helposition.z * SCALE
-			);
+		//TODO this is pretty hacky since helposition is NOT Vector3D
+		this.position.copy(elements.helposition);
+		
+		// TODO: dont multiply (make scene adapt if that works)
+		this.position.multiplyScalar(SCALE);
 	}
 
+	// orbit a sidereal year from J2000
 	getOrbitLine() {
-		let precision = 50; // lines per sidereal orbit
+		let precision = 50; // lines per orbit
 		let orbitDays = this.planetData.physical.siderealOrbit * 365.25;
 		let unit = orbitDays / precision;
 
 		let geometry = new THREE.Geometry();
 
 		for (let i = 0, j = 0; i < precision; i += 1, j += unit) {
-			let elements = new OrbitalElements(this.planetData, J2000.addDays(j));
+			let elements = OrbitalElements.compute(this.planetData, OrbitalElements.J2000.addDays(j));
 			let vertex = new THREE.Vector3();
 			vertex.x = elements.helposition.x * SCALE;
 			vertex.y = elements.helposition.y * SCALE;
@@ -57,19 +52,20 @@ export class CelestialBody extends THREE.Mesh {
 			geometry.vertices.push(vertex);
 		}
 		
+		// TODO: is there an api way of doing this	
 		// close path
-		// TODO: is there an api way of doing this		
 		geometry.vertices.push(geometry.vertices[0]);
-	 let material = new THREE.LineBasicMaterial({ color: this.color, linewidth: 0.1 });
-	//let material = new THREE.LineDashedMaterial({ color: this.color, dashSize: 3, gapSize: 0.5, linewidth: 2 }, THREE.LinePieces);
-	// todo make dashed lines work
+		
+		//TODO: fix all dis
+		let material = new THREE.LineBasicMaterial({ color: this.material.color, linewidth: 0.1 });
+		//let material = new THREE.LineDashedMaterial({ color: this.color, dashSize: 3, gapSize: 0.5, linewidth: 2 }, THREE.LinePieces);
+		// todo make dashed lines work
 
 		material.color.multiplyScalar(0.7);
 		return new THREE.Line(geometry, material);
 	}
 
 }
-
 
 // randomized star field (particles)
 export class Stars extends THREE.PointCloud {
@@ -85,5 +81,14 @@ export class Stars extends THREE.PointCloud {
 		}
 
 		super(geometry, new THREE.PointCloudMaterial({ color: color }));
+	}
+}
+
+//TODO: lens flare, and maybe actual sun object
+// SunLight really
+export class Sun extends THREE.PointLight {
+	constructor() {
+		//  let light = new THREE.PointLight(0xffffff, 1, 0);
+		super(0xffffff, 1, 0);
 	}
 }
