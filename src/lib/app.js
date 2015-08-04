@@ -34,11 +34,13 @@ function init() {
   //controls.noZoom = true;
   controls.noPan = true;
   //controls.addEventListener( 'change', function(){console.log('con-ch')} );
+  controls.minDistance = 0.05; // todo: set according to target planet size
+  controls.maxDistance = 200;
 
   // todo
   planets = planetThing.getPlanets();
 
-  controls.target = planets[2].position;
+  controls.target = planets[3].position;
 
   //planets.pop(); planets.pop(); // todo hack pop outer planets
 
@@ -63,17 +65,17 @@ function init() {
 
   // add a bunch of star particles
   //todo bad and overkill put them all on inner surface rite
-  let particles = new space.Stars(5000, 1000, 0x888888/*0xcccccc*/);
+  let particles = new space.Stars(3000, 1000, 0x888888/*0xcccccc*/);
   scene.add(particles);
 }
 
 // TODO: MOVE
 let currentEpoch = new Date('1991-06-21T00:00:00');
 
-let debugCount = 0;
+let debugCount = 0, dc2 = 0;
 let lastStamp = Date.now();
 
-let timeFactor = 30 * 24 * 60 * 60;
+let timeFactor = 15 /* days per second */ * 24 * 60 * 60;
 
 function render() {
   requestAnimationFrame(render);
@@ -102,8 +104,12 @@ function render() {
   
 
   // todo log epoch
-  if (debugCount % 120 === 0)
+  if (debugCount % 120 === 0) {
     console.log('epoch', currentEpoch);
+  }
+
+  // planet switcher
+  if (debugCount % 300 === 0) { controls.target = planets[dc2++ % 9].position; }
 
   debugCount++;
   rendercam.render(scene);
@@ -111,7 +117,6 @@ function render() {
 
 // todo convinence
 function updatePlanetPositions(epoch) {
-
   for (let i = 0; i < planets.length; i++) {
     planets[i].setPositionFromEpoch(epoch);
   }
@@ -120,4 +125,6 @@ function updatePlanetPositions(epoch) {
 
 
 init();
+updatePlanetPositions(currentEpoch);
 render();
+

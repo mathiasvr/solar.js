@@ -11,7 +11,7 @@ Date.prototype.addDays = function (days) {
 
 const KM_PER_AU = 149597870.7;
 const SCALE = 1; // TODO: getting ready to remove scaling, but test if it is precise enough, working in AU cuts some decimals son
-const SIZE_SCALE = 1500; // TODO: remove even more hacks
+const SIZE_SCALE = 1000; // TODO: remove even more hacks
 		
 export class CelestialBody extends THREE.Mesh {
 	constructor(meanElements) {
@@ -41,7 +41,8 @@ export class CelestialBody extends THREE.Mesh {
 
 	// orbit a sidereal year from J2000
 	getOrbitLine() {
-		let precision = 50; // lines per orbit
+		// TODO: use some sort of spline ellipsis thing, instead off many lines
+		let precision = 100; // lines per orbit
 		let orbitDays = this.planetData.physical.siderealOrbit * 365.25;
 		let unit = orbitDays / precision;
 
