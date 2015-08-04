@@ -9,12 +9,13 @@ let SCREEN_HEIGHT = window.innerHeight;
 export default class RenderCam { //todo rename
   
   constructor() {
-    this.debugCamera = new THREE.PerspectiveCamera(70, 0.5 * SCREEN_WIDTH / SCREEN_HEIGHT, 1, 10000);
-    this.debugCamera.position.z = 2500;
+    this.debugCamera = new THREE.PerspectiveCamera(70, 0.5 * SCREEN_WIDTH / SCREEN_HEIGHT, 1, 1000);
+    this.debugCamera.position.z = 50;
 
-    this.camera = new THREE.PerspectiveCamera(50, 0.5 * SCREEN_WIDTH / SCREEN_HEIGHT, 1/*150*/, 2500);
-    this.camera.up.set(0, 0, 1);// todo what is the rite way here
-    this.camera.position.z = 250; 
+    this.camera = new THREE.PerspectiveCamera(50, 0.5 * SCREEN_WIDTH / SCREEN_HEIGHT, 0.01, 200);
+    this.camera.up.set(0, 0, 1);// TODO what is the rite way here
+    this.camera.position.y = 2; 
+    this.camera.position.z = 1; 
 
     this.cameraHelper = new THREE.CameraHelper(this.camera);
 

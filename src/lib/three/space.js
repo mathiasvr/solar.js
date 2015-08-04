@@ -10,29 +10,33 @@ Date.prototype.addDays = function (days) {
 }
 
 const KM_PER_AU = 149597870.7;
-const SCALE = 100; // TODO: fix
-
+const SCALE = 1; // TODO: getting ready to remove scaling, but test if it is precise enough, working in AU cuts some decimals son
+const SIZE_SCALE = 1500; // TODO: remove even more hacks
+		
 export class CelestialBody extends THREE.Mesh {
-	constructor(radius, color, meanElements) {
+	constructor(meanElements) {
+		let radius = (meanElements.physical.eqradius * SCALE * SIZE_SCALE) / KM_PER_AU; // TODO: less hacky
+		
+		console.log(meanElements.name + ' radius: ' + radius); // TODO: DON'T DEBUG LOG AND sheet though
 
-		const size_scale = 1500; // TODO: remove even more hacks
-		radius = (radius * SCALE * size_scale) / KM_PER_AU; // TODO: less hacky
-		console.log(meanElements.name + ' radius: ' + radius);
+		super(new THREE.SphereGeometry(radius, 32, 24), new THREE.MeshPhongMaterial({ color: meanElements.color, wireframe: false }));
 
-		super(new THREE.SphereGeometry(radius, 32, 24), new THREE.MeshPhongMaterial({ color: color, wireframe: false }));
-
-		this.planetData = meanElements;
+		this.planetData = meanElements; // todo consistent naming 
 	}
 	
 	setPositionFromEpoch(epoch) {
 		this.epoch = epoch;
 		let elements = OrbitalElements.compute(this.planetData, epoch);
 
-		//TODO this is pretty hacky since helposition is NOT Vector3D
+		// TODO this is pretty hacky since helposition is NOT Vector3D
 		this.position.copy(elements.helposition);
 		
 		// TODO: dont multiply (make scene adapt if that works)
 		this.position.multiplyScalar(SCALE);
+		
+		// TODO: REMOVE ME SOOOOON
+		//if (this.planetData.name == ('Uranus')) console.log(this.planetData.name, 'pos', this.position);
+		
 	}
 
 	// orbit a sidereal year from J2000

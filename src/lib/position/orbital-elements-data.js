@@ -24,7 +24,7 @@ export const meanElements = {
 		elements: { a: 0.38709927, e: 0.20563593, i: 7.00497902, L: 252.25032350, wl: 77.45779628, N: 48.33076593 },
 		rates: { a: 0.00000037, e: 0.00001906, i: -0.00594749, L: 149472.67411175, wl: 0.16047689, N: -0.12534081 },
 		physical: { eqradius: 2439.7, siderealOrbit: 0.2408467 },
-		color: 0x6D7B7B // todo structure this shit
+		color: 0x6d7b7b // todo structure this shit
 	}, venus: {
 		name: 'Venus',
 		elements: { a: 0.72333566, e: 0.00677672, i: 3.39467605, L: 181.97909950, wl: 131.60246718, N: 76.67984255 },
@@ -72,7 +72,7 @@ export const meanElements = {
 		elements: { a: 39.48211675, e: 0.24882730, i: 17.14001206, L: 238.92903833, wl: 224.06891629, N: 110.30393684 },
 		rates: { a: -0.00031596, e: 0.00005170, i: 0.00004818, L: 145.20780515, wl: -0.04062942, N: -0.01183482 },
 		physical: { eqradius: 1151, siderealOrbit: 247.92065 },
-		color: 0x00ffff
+		color: 0x99ccff
 	}
 };
 
