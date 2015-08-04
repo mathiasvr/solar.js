@@ -28,7 +28,6 @@ function init() {
     
   document.body.appendChild(rendercam.renderer.domElement);
 
-
   // set up camera control	
   controls = new THREE.OrbitControls(rendercam.camera);
   //controls.noZoom = true;
@@ -42,8 +41,6 @@ function init() {
 
   controls.target = planets[3].position;
 
-  //planets.pop(); planets.pop(); // todo hack pop outer planets
-
   // add planets and orbit path
   for (let planet of planets) {
     scene.add(planet);
@@ -56,12 +53,11 @@ function init() {
 
   // add some hemisphere light, so planets are not completely dark
   // TODO: i have no idea how this works so...
-  let hemiLight = new THREE.HemisphereLight(0xffffff, 0xffffff, 0.3);
+  let backgroundLight = new THREE.HemisphereLight(0xffffff, 0xffffff, 0.3);
   // hemiLight.color.setHSL( 0.6, 1, 0.6 );
   // hemiLight.groundColor.setHSL( 0.095, 1, 0.75 );
-  hemiLight.position.set(0, 0, 500);
-  scene.add(hemiLight);
-
+  backgroundLight.position.set(0, 0, 500);
+  scene.add(backgroundLight);
 
   // add a bunch of star particles
   //todo bad and overkill put them all on inner surface rite
@@ -82,12 +78,13 @@ function render() {
   
   // TODO: remove crazy limiter; how often is computation nececarry
   if (debugCount % 3 === 0) {
+    // realtime scaling (independent of tab pausing and framerate)
     let now = Date.now();
     let timePassed = now - lastStamp;
     let addTime = timePassed * timeFactor;
 
     currentEpoch.setTime(currentEpoch.getTime() + addTime);
-    updatePlanetPositions(currentEpoch);
+    setPlanetPositionsFromEpoch(currentEpoch);
 
     lastStamp = now;
 
@@ -102,29 +99,26 @@ function render() {
   // camera follows the cube
   //rendercam.camera.lookAt(planets[2].position);
   
-
-  // todo log epoch
-  if (debugCount % 120 === 0) {
-    console.log('epoch', currentEpoch);
-  }
+  // log epoch
+  if (debugCount % 120 === 0) { console.log('epoch', currentEpoch); }
 
   // planet switcher
-  if (debugCount % 300 === 0) { controls.target = planets[dc2++ % 9].position; }
+  if (debugCount % 600 === 0) { controls.target = planets[dc2++ % 9].position; }
 
   debugCount++;
   rendercam.render(scene);
 }
 
-// todo convinence
-function updatePlanetPositions(epoch) {
-  for (let i = 0; i < planets.length; i++) {
-    planets[i].setPositionFromEpoch(epoch);
-  }
+// TODO convinence
+function setPlanetPositionsFromEpoch(epoch) {
+  /*for (let planet of planets) {
+      planet.setPositionFromEpoch(epoch);
+    }*/
+ // planets.forEach(planet => planet.setPositionFromEpoch(epoch));
+  planets.forEach(planet => planet.epoch = epoch);
 }
 
 
-
 init();
-updatePlanetPositions(currentEpoch);
+setPlanetPositionsFromEpoch(currentEpoch);
 render();
-

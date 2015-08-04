@@ -10,7 +10,7 @@ Date.prototype.addDays = function (days) {
 }
 
 const KM_PER_AU = 149597870.7;
-const SCALE = 1; // TODO: getting ready to remove scaling, but test if it is precise enough, working in AU cuts some decimals son
+const SCALE = 1; // TODO: getting ready to remove scaling, but test if it is precise enough to use AU
 const SIZE_SCALE = 1000; // TODO: remove even more hacks
 		
 export class CelestialBody extends THREE.Mesh {
@@ -24,9 +24,10 @@ export class CelestialBody extends THREE.Mesh {
 		this.planetData = meanElements; // todo consistent naming 
 	}
 	
-	setPositionFromEpoch(epoch) {
-		this.epoch = epoch;
-		let elements = OrbitalElements.compute(this.planetData, epoch);
+	// set position from epoch
+	set epoch(value) {
+		this._epoch = value;
+		let elements = OrbitalElements.compute(this.planetData, value);
 
 		// TODO this is pretty hacky since helposition is NOT Vector3D
 		this.position.copy(elements.helposition);
@@ -36,20 +37,34 @@ export class CelestialBody extends THREE.Mesh {
 		
 		// TODO: REMOVE ME SOOOOON
 		//if (this.planetData.name == ('Uranus')) console.log(this.planetData.name, 'pos', this.position);
-		
+	}
+	
+	get epoch() {
+		return this._epoch;
+	}
+	
+	// TODO remove this
+	getOrbitLine() {
+		return new OrbitLine(this.planetData);
 	}
 
-	// orbit a sidereal year from J2000
-	getOrbitLine() {
+}
+
+export class OrbitLine extends THREE.Line {
+	
+		// orbit a sidereal year from J2000
+	constructor(planetData) {
 		// TODO: use some sort of spline ellipsis thing, instead off many lines
+		// then refactor addDays if still nec.
+
 		let precision = 100; // lines per orbit
-		let orbitDays = this.planetData.physical.siderealOrbit * 365.25;
+		let orbitDays = planetData.physical.siderealOrbit * 365.25;
 		let unit = orbitDays / precision;
 
 		let geometry = new THREE.Geometry();
 
 		for (let i = 0, j = 0; i < precision; i += 1, j += unit) {
-			let elements = OrbitalElements.compute(this.planetData, OrbitalElements.J2000.addDays(j));
+			let elements = OrbitalElements.compute(planetData, OrbitalElements.J2000.addDays(j));
 			let vertex = new THREE.Vector3();
 			vertex.x = elements.helposition.x * SCALE;
 			vertex.y = elements.helposition.y * SCALE;
@@ -62,14 +77,17 @@ export class CelestialBody extends THREE.Mesh {
 		geometry.vertices.push(geometry.vertices[0]);
 		
 		//TODO: fix all dis
-		let material = new THREE.LineBasicMaterial({ color: this.material.color, linewidth: 0.1 });
+		let material = new THREE.LineBasicMaterial({ color: planetData.color, linewidth: 0.1 });
 		//let material = new THREE.LineDashedMaterial({ color: this.color, dashSize: 3, gapSize: 0.5, linewidth: 2 }, THREE.LinePieces);
 		// todo make dashed lines work
 
+		// TODO DONT DO IT HERE
+		// darken color
 		material.color.multiplyScalar(0.7);
-		return new THREE.Line(geometry, material);
+		
+		super(geometry, material);
 	}
-
+	
 }
 
 // randomized star field (particles)

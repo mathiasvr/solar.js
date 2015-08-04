@@ -24,7 +24,7 @@ export const meanElements = {
 		elements: { a: 0.38709927, e: 0.20563593, i: 7.00497902, L: 252.25032350, wl: 77.45779628, N: 48.33076593 },
 		rates: { a: 0.00000037, e: 0.00001906, i: -0.00594749, L: 149472.67411175, wl: 0.16047689, N: -0.12534081 },
 		physical: { eqradius: 2439.7, siderealOrbit: 0.2408467 },
-		color: 0x6d7b7b // todo structure this shit
+		color: 0x6d7b7b // todo structure this shit, i want to seperate this completely
 	}, venus: {
 		name: 'Venus',
 		elements: { a: 0.72333566, e: 0.00677672, i: 3.39467605, L: 181.97909950, wl: 131.60246718, N: 76.67984255 },
