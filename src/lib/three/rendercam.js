@@ -26,10 +26,14 @@ export default class RenderCam { //todo rename
     this.cameraHelper = new THREE.CameraHelper(this.camera);
 
     // setup renderer
-    this.renderer = new THREE.WebGLRenderer(/*{ antialias: true }*/);
+    
+    //todo learn about alpha
+    this.renderer = new THREE.WebGLRenderer({ antialias: false, alpha: false });
     this.renderer.setPixelRatio(window.devicePixelRatio);
     this.renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
     this.renderer.autoClear = false;
+    this.renderer.setClearColor(0x000000/*, alpha*/);
+    
     
     // TODO: investigate gamma correction
     // this.renderer.gammaInput = true;

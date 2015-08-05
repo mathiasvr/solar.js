@@ -38,7 +38,7 @@ export class CelestialBody extends THREE.Mesh {
 		// TODO: REMOVE ME SOOOOON
 		//if (this.planetData.name == ('Uranus')) console.log(this.planetData.name, 'pos', this.position);
 	}
-	
+
 	get epoch() {
 		return this._epoch;
 	}
@@ -84,10 +84,10 @@ export class OrbitLine extends THREE.Line {
 		// TODO DONT DO IT HERE
 		// darken color
 		material.color.multiplyScalar(0.7);
-		
+
 		super(geometry, material);
 	}
-	
+
 }
 
 // randomized star field (particles)
@@ -113,5 +113,17 @@ export class Sun extends THREE.PointLight {
 	constructor() {
 		//  let light = new THREE.PointLight(0xffffff, 1, 0);
 		super(0xffffff, 1, 0);
+	}
+}
+
+let textureFlare0 = THREE.ImageUtils.loadTexture("jspm_packages/github/mrdoob/three.js@master/examples/textures/lensflare/lensflare0.png");
+// TODO combine objects
+export class SunFlare extends THREE.LensFlare {
+	constructor() {
+		// todo: experiment/ describe values
+		var flareColor = new THREE.Color(0xffffff);
+		flareColor.setHSL(0.55, 0.9, 0.5 + 0.5);
+
+		super(textureFlare0, 700, 10.0, THREE.AdditiveBlending, flareColor);
 	}
 }
