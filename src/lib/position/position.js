@@ -4,6 +4,7 @@
 	
 //dat.eclpos = calculateEcclipticPosition(dat.N, dat.i, dat.w, dat.opos);
 
+// todo rename params / explain (euler)
 
 // heliocentric coordinates in the orbital plane
 export function calculateOrbitalPosition(a, e, E) {
@@ -13,6 +14,7 @@ export function calculateOrbitalPosition(a, e, E) {
 		z: 0
 	}
 }
+
 
 // position it the helicentric eccliptic plane
 //TODO: this can be done in many ways... choose 

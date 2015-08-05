@@ -36,6 +36,7 @@ function init() {
   //controls.noZoom = true;
   controls.noPan = true;
   controls.zoomSpeed = 0.5;
+
   //controls.addEventListener( 'change', function(){console.log('con-ch')} );
   controls.minDistance = 0.05; // todo: set according to target planet size
   controls.maxDistance = 200;

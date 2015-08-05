@@ -34,30 +34,30 @@ const RAD2DEG = 180 / Math.PI;
 const DEG2RAD = Math.PI / 180;
 
 //OrbitalElements
-function compute(initialElements, epoch) {
+function compute(orbit, epoch) {
 	let elements = {};
 
 	elements.epoch = epoch; // TODO: epochify with method or getter or something
 		
 	// Number of centuries past J2000.0
-	// TODO initialElements.ref-epoch
+	// TODO orbit.ref-epoch
 	let T = (toEpoch(epoch) - toEpoch(J2000)) / SECS_PER_DAY / DAYS_PER_CENTURY;
 
-	for (let key in initialElements.elements) {
-		elements[key] = initialElements.elements[key] + T * initialElements.rates[key];
+	for (let key in orbit.elements) {
+		elements[key] = orbit.elements[key] + T * orbit.rates[key];
 	}
 
 	// convert degrees to radians
 	// TODO: maybe fix entire dataset, if precise enough, else prettify this
 	elements.i = elements.i * DEG2RAD;
-	elements.wl = elements.wl * DEG2RAD;
-	elements.N = elements.N * DEG2RAD;
+	elements.ϖ = elements.ϖ * DEG2RAD;
+	elements.Ω = elements.Ω * DEG2RAD;
 	elements.L = elements.L * DEG2RAD;
 
 	// argument of perigee (perihelion)
-	elements.w = elements.wl - elements.N;
+	elements.w = elements.ϖ - elements.Ω;
 	// mean anomaly
-	elements.M = elements.L - elements.wl;
+	elements.M = elements.L - elements.ϖ;
 		
 	//TODO modulus all or waht maybe in funcions whater test elements haha lol dont n
 	elements.w = elements.w % (2 * Math.PI);
@@ -68,7 +68,7 @@ function compute(initialElements, epoch) {
 	// TODO: the structure need serious work
 	elements.position = Position.calculateOrbitalPosition(elements.a, elements.e, elements.E);
 
-	elements.helposition = Position.calculateEcclipticPosition(elements.N, elements.i, elements.w, elements.position);
+	elements.helposition = Position.calculateEcclipticPosition(elements.Ω, elements.i, elements.w, elements.position);
 
 	return elements;
 }
@@ -113,14 +113,14 @@ export default {compute, J2000};
 // 		// convert degrees to radians
 // 		// TODO: maybe fix entire dataset, if precise enough, else prettify this
 // 		this.i = this.i * DEG2RAD;
-// 		this.wl = this.wl * DEG2RAD;
-// 		this.N = this.N * DEG2RAD;
+// 		this.ϖ = this.ϖ * DEG2RAD;
+// 		this.Ω = this.Ω * DEG2RAD;
 // 		this.L = this.L * DEG2RAD;
 
 // 		// argument of perigee (perihelion)
-// 		this.w = this.wl - this.N;
+// 		this.w = this.ϖ - this.Ω;
 // 		// mean anomaly
-// 		this.M = this.L - this.wl;
+// 		this.M = this.L - this.ϖ;
 		
 // 		//TODO modulus
 // 		this.w = this.w % (2 * Math.PI);
@@ -131,7 +131,7 @@ export default {compute, J2000};
 // 		// TODO: the structure need serious work
 // 		this.position = Position.calculateOrbitalPosition(this.a, this.e, this.E);
 		
-// 		this.helposition = Position.calculateEcclipticPosition(this.N, this.i, this.w, this.position);
+// 		this.helposition = Position.calculateEcclipticPosition(this.Ω, this.i, this.w, this.position);
 // 	}
 
 // }

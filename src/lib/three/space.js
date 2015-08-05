@@ -27,7 +27,7 @@ export class CelestialBody extends THREE.Mesh {
 	// set position from epoch
 	set epoch(value) {
 		this._epoch = value;
-		let elements = OrbitalElements.compute(this.planetData, value);
+		let elements = OrbitalElements.compute(this.planetData.orbit, value);
 
 		// TODO this is pretty hacky since helposition is NOT Vector3D
 		this.position.copy(elements.helposition);
@@ -64,7 +64,7 @@ export class OrbitLine extends THREE.Line {
 		let geometry = new THREE.Geometry();
 
 		for (let i = 0, j = 0; i < precision; i += 1, j += unit) {
-			let elements = OrbitalElements.compute(planetData, OrbitalElements.J2000.addDays(j));
+			let elements = OrbitalElements.compute(planetData.orbit, OrbitalElements.J2000.addDays(j));
 			let vertex = new THREE.Vector3();
 			vertex.x = elements.helposition.x * SCALE;
 			vertex.y = elements.helposition.y * SCALE;
