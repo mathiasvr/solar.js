@@ -24,6 +24,10 @@ export class CelestialBody extends THREE.Mesh {
 		this.planetData = meanElements; // todo consistent naming 
 	}
 	
+	get epoch() {
+		return this._epoch;
+	}
+	
 	// set position from epoch
 	set epoch(value) {
 		this._epoch = value;
@@ -37,10 +41,6 @@ export class CelestialBody extends THREE.Mesh {
 		
 		// TODO: REMOVE ME SOOOOON
 		//if (this.planetData.name == ('Uranus')) console.log(this.planetData.name, 'pos', this.position);
-	}
-
-	get epoch() {
-		return this._epoch;
 	}
 	
 	// TODO remove this
@@ -121,7 +121,7 @@ let textureFlare0 = THREE.ImageUtils.loadTexture("jspm_packages/github/mrdoob/th
 export class SunFlare extends THREE.LensFlare {
 	constructor() {
 		// todo: experiment/ describe values
-		var flareColor = new THREE.Color(0xffffff);
+		let flareColor = new THREE.Color(0xffffff);
 		flareColor.setHSL(0.55, 0.9, 0.5 + 0.5);
 
 		super(textureFlare0, 700, 10.0, THREE.AdditiveBlending, flareColor);

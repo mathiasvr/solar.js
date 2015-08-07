@@ -1,4 +1,4 @@
-import * as Position from './position';
+import Position from './position';
 
 function toEpoch(date) {
 	var epoch = date.getTime() / 1000;

@@ -19,14 +19,14 @@ export function calculateOrbitalPosition(a, e, E) {
 // position it the helicentric eccliptic plane
 //TODO: this can be done in many ways... choose 
 // TEST IN AFTER EDITS
-export function calculateEcclipticPosition(N, i, w, opos) {
+export function calculateEcclipticPosition(N, i, w, position) {
 	return {
-		x: opos.x * (Math.cos(w) * Math.cos(N) - Math.sin(w) * Math.sin(N) * Math.cos(i))
-		+ opos.y * (- Math.sin(w) * Math.cos(N) - Math.cos(w) * Math.sin(N) * Math.cos(i)),
-		y: opos.x * (Math.cos(w) * Math.sin(N) + Math.sin(w) * Math.cos(N) * Math.cos(i))
-		+ opos.y * (- Math.sin(w) * Math.sin(N) + Math.cos(w) * Math.cos(N) * Math.cos(i)),
-		z: opos.x * (Math.sin(w) * Math.sin(i))
-		+ opos.y * (Math.cos(w) * Math.sin(i))
+		x: position.x * (Math.cos(w) * Math.cos(N) - Math.sin(w) * Math.sin(N) * Math.cos(i))
+		+ position.y * (- Math.sin(w) * Math.cos(N) - Math.cos(w) * Math.sin(N) * Math.cos(i)),
+		y: position.x * (Math.cos(w) * Math.sin(N) + Math.sin(w) * Math.cos(N) * Math.cos(i))
+		+ position.y * (- Math.sin(w) * Math.sin(N) + Math.cos(w) * Math.cos(N) * Math.cos(i)),
+		z: position.x * (Math.sin(w) * Math.sin(i))
+		+ position.y * (Math.cos(w) * Math.sin(i))
 	}
 	
 	/*let cN = Math.cos(N); let sN = Math.sin(N);
@@ -40,3 +40,5 @@ export function calculateEcclipticPosition(N, i, w, opos) {
 	}*/
 }
 
+
+export default {calculateOrbitalPosition, calculateEcclipticPosition};
