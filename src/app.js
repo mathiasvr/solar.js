@@ -8,10 +8,10 @@ import OrbitControls from 'three-orbit-controls';
 // todo is this the way?
 THREE.OrbitControls = OrbitControls(THREE);
 
+import {planetsInfo} from './lib/position/orbital-elements-data';
+
 import * as space from './lib/three/space';
 import RenderCam from './lib/three/rendercam';
-
-import * as planetThing from './lib/three/makePlanets';
 
 import Label from './lib/2Dstuff/label';
 
@@ -31,7 +31,7 @@ function init() {
   document.body.appendChild(rendercam.renderer.domElement);
   
   // todo
-  planets = planetThing.getPlanets();
+  planets = getPlanets();
 
   // set up camera control	
   controls = new THREE.OrbitControls(rendercam.camera);
@@ -132,6 +132,21 @@ function setPlanetPositionsFromEpoch(epoch) {
   planets.forEach(planet => planet.epoch = epoch);
 }
 
+// TODO where does this really belong
+function getPlanets() {
+	// for (let planetData in planetsInfo) {
+	// 	let planetData = planetsInfo[property];
+	// 	planets.push(new CelestialBody(planetData));
+	// }
+	
+	return Object.keys(planetsInfo).map(key => new space.CelestialBody(planetsInfo[key]));
+	// TODO: consider cleaner with array of planetdata (values instead of keys):
+	// planetsData.map(planetData => new CelestialBody(planetData));
+	// also look into es6 generators
+}
+
+
+// TODO: bootstrap this elsewhere, maybe
 init();
 
 // TODO: remove
