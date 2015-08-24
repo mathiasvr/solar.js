@@ -11,20 +11,27 @@ Date.prototype.addDays = function (days) {
 
 const KM_PER_AU = 149597870.7;
 const SCALE = 1; // TODO: getting ready to remove scaling, but test if it is precise enough to use AU
-const SIZE_SCALE = 1000; // TODO: remove even more hacks
 		
 export class CelestialBody extends THREE.Mesh {
-	constructor(meanElements) {
-		let radius = (meanElements.physical.eqradius * SCALE * SIZE_SCALE) / KM_PER_AU; // TODO: less hacky
+	constructor(planetData) {
+		let sizeScale = 1000;
+		let radius = (planetData.physical.eqradius * SCALE /* * sizeScale */) / KM_PER_AU; // TODO: less hacky
+		console.log(planetData.name + ' radius: ' + radius); // TODO: DON'T DEBUG LOG AND sheet though
 		
-		console.log(meanElements.name + ' radius: ' + radius); // TODO: DON'T DEBUG LOG AND sheet though
+		super(new THREE.SphereGeometry(radius, 32, 24), new THREE.MeshPhongMaterial({ color: planetData.color, wireframe: false }));
 
-		super(new THREE.SphereGeometry(radius, 32, 24), new THREE.MeshPhongMaterial({ color: meanElements.color, wireframe: false }));
-
-		this.planetData = meanElements; // todo consistent naming 
+		this.planetData = planetData;
+		
+		//this.scale.multiplyScalar(sizeScale);
+		this.setSize(sizeScale);
+	}
+	
+	setSize(s) {
+		this.scale.set(s, s, s);
 	}
 	
 	get epoch() {
+		// TODO: maybe set default value?
 		return this._epoch;
 	}
 	
@@ -33,14 +40,11 @@ export class CelestialBody extends THREE.Mesh {
 		this._epoch = value;
 		let elements = OrbitalElements.compute(this.planetData.orbit, value);
 
-		// TODO this is pretty hacky since helposition is NOT Vector3D
+		// TODO this is pretty hacky since helposition is NOT Vector3
 		this.position.copy(elements.helposition);
 		
 		// TODO: dont multiply (make scene adapt if that works)
 		this.position.multiplyScalar(SCALE);
-		
-		// TODO: REMOVE ME SOOOOON
-		//if (this.planetData.name == ('Uranus')) console.log(this.planetData.name, 'pos', this.position);
 	}
 	
 	// TODO remove this
@@ -66,9 +70,8 @@ export class OrbitLine extends THREE.Line {
 		for (let i = 0, j = 0; i < precision; i += 1, j += unit) {
 			let elements = OrbitalElements.compute(planetData.orbit, OrbitalElements.J2000.addDays(j));
 			let vertex = new THREE.Vector3();
-			vertex.x = elements.helposition.x * SCALE;
-			vertex.y = elements.helposition.y * SCALE;
-			vertex.z = elements.helposition.z * SCALE;
+			vertex.copy(elements.helposition); // TODO: not vector3 hack (maybe make own (safe) copy/convert)
+			vertex.multiplyScalar(SCALE);
 			geometry.vertices.push(vertex);
 		}
 		

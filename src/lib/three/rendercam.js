@@ -1,14 +1,13 @@
 import THREE from 'three.js';
 
-// TODO: i hate consts
+// TODO: remove
 const DEBUG_CAM = false; // TODO: FIX
-const DEBUG_ROTATION = false;
 
 let SCREEN_WIDTH = window.innerWidth;
 let SCREEN_HEIGHT = window.innerHeight;
 
 let badDebugThing = 1; // TODO: MAKE BETTER OR REMOVE
-export default class RenderCam { //todo rename
+export default class RenderCam { // TODO: rename, this is some sort of combined camera and renderer, manager thing
   
   constructor() {
     if (DEBUG_CAM) {
@@ -34,7 +33,6 @@ export default class RenderCam { //todo rename
     this.renderer.autoClear = false;
     this.renderer.setClearColor(0x000000/*, alpha*/);
     
-    
     // TODO: investigate gamma correction
     // this.renderer.gammaInput = true;
     // this.renderer.gammaOutput = true;
@@ -58,15 +56,6 @@ export default class RenderCam { //todo rename
   }
 
   render(scene) {
-    // rotate debug camera
-    if (DEBUG_CAM && DEBUG_ROTATION) {
-      let r = Date.now() * 0.0005;
-      this.debugCamera.position.x = 2500 * Math.cos(r * 0.1);
-      this.debugCamera.position.z = 2500 * Math.sin(r * 0.1);
-      //this.debugCamera.position.y = 700 * Math.sin(r);
-      this.debugCamera.lookAt(this.camera.position);
-    }
-
     this.renderer.clear(); // TODO: we disabled auto clear
 
     // render perspective camera to the left
