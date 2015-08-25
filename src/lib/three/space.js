@@ -13,9 +13,8 @@ const KM_PER_AU = 149597870.7;
 const SCALE = 1; // TODO: getting ready to remove scaling, but test if it is precise enough to use AU
 		
 export class CelestialBody extends THREE.Mesh {
-	constructor(planetData) {
-		let sizeScale = 1000;
-		let radius = (planetData.physical.eqradius * SCALE /* * sizeScale */) / KM_PER_AU; // TODO: less hacky
+	constructor(planetData, scale) {
+		let radius = (planetData.physical.meanRadius * SCALE /* * sizeScale */) / KM_PER_AU; // TODO: less hacky
 		console.log(planetData.name + ' radius: ' + radius); // TODO: DON'T DEBUG LOG AND sheet though
 		
 		super(new THREE.SphereGeometry(radius, 32, 24), new THREE.MeshPhongMaterial({ color: planetData.color, wireframe: false }));
@@ -23,10 +22,10 @@ export class CelestialBody extends THREE.Mesh {
 		this.planetData = planetData;
 		
 		//this.scale.multiplyScalar(sizeScale);
-		this.setSize(sizeScale);
+		this.setScale(scale);
 	}
 
-	setSize(s) {
+	setScale(s) {
 		this.scale.set(s, s, s);
 	}
 

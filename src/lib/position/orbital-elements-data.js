@@ -1,6 +1,8 @@
+// Keplerian (orbital) elements:		http://ssd.jpl.nasa.gov/?planet_pos
+// Physical Characteristics:				http://ssd.jpl.nasa.gov/?planet_phys_par
+
 // TODO rename this file to planetary data or something its not just orbital elements any more
 // consider seperating things, instead of 1 big object (orbital, physical, misc), then zip it together
-
 
 /*
  * Keplerian elements and their rates, with respect to the mean ecliptic
@@ -15,88 +17,96 @@
  *
  * rates: units added per century
  */
+ 
+/*
+ * equatorialRadius: 			km
+ * meanRadius: 						km
+ * siderealOrbit:					years
+ */
+
+// TODO: not using equatorialRadius anymore, maybe shape planets correctly
 
 // TODO: a lot rename and shit
-export const planetsInfo = {
+export const planetsInfo = [
 	/*reference_epoch: J2000,*/
 	/*validInterval: {
 		from: new Date('1800-01-01T00:00:00'),
 		to: new Date('2050-01-01T00:00:00')
 	},*/
-	mercury: {
+	/*mercury:*/ {
 		name: 'Mercury',
 		orbit: {
 			elements: { a: 0.38709927, e: 0.20563593, i: 7.00497902, L: 252.25032350, ϖ: 77.45779628, Ω: 48.33076593 },
 			rates: { a: 0.00000037, e: 0.00001906, i: -0.00594749, L: 149472.67411175, ϖ: 0.16047689, Ω: -0.12534081 }
 		},
-		physical: { eqradius: 2439.7, siderealOrbit: 0.2408467 },
+		physical: { meanRadius: 2439.7, equatorialRadius: 2439.7, siderealOrbit: 0.2408467 },
 		color: 0x6d7b7b // todo structure this , i want to seperate this completely
-	}, venus: {
+	}, /*venus:*/ {
 		name: 'Venus',
 		orbit: {
 			elements: { a: 0.72333566, e: 0.00677672, i: 3.39467605, L: 181.97909950, ϖ: 131.60246718, Ω: 76.67984255 },
 			rates: { a: 0.00000390, e: -0.00004107, i: -0.00078890, L: 58517.81538729, ϖ: 0.00268329, Ω: -0.27769418 }
 		},
-		physical: { eqradius: 6051.8, siderealOrbit: 0.61519726 },
+		physical: { meanRadius: 6051.8, equatorialRadius: 6051.8, siderealOrbit: 0.61519726 },
 		color: 0xffff66
-	}, earth: {
+	}, /*earth:*/ {
 		name: 'Earth', // TODO: this is actually the Earth-Moon Barycenter
 		orbit: {
 			elements: { a: 1.00000261, e: 0.01671123, i: -0.00001531, L: 100.46457166, ϖ: 102.93768193, Ω: 0.0 },
 			rates: { a: 0.00000562, e: -0.00004392, i: -0.01294668, L: 35999.37244981, ϖ: 0.32327364, Ω: 0.0 }
 		},
-		physical: { eqradius: 6378.14, siderealOrbit: 1.0000174 }, // TODO: km and year
+		physical: { meanRadius: 6371, equatorialRadius: 6378.14, siderealOrbit: 1.0000174 },
 		color: 0x0033ff
-	}, mars: {
+	}, /*mars:*/ {
 		name: 'Mars',
 		orbit: {
 			elements: { a: 1.52371034, e: 0.09339410, i: 1.84969142, L: -4.55343205, ϖ: -23.94362959, Ω: 49.55953891 },
 			rates: { a: 0.00001847, e: 0.00007882, i: -0.00813131, L: 19140.30268499, ϖ: 0.44441088, Ω: -0.29257343 }
 		},
-		physical: { eqradius: 3396.19, siderealOrbit: 1.8808476 },
+		physical: { meanRadius: 3389.50, equatorialRadius: 3396.19, siderealOrbit: 1.8808476 },
 		color: 0xff3300
-	}, jupiter: {
+	}, /*jupiter:*/ {
 		name: 'Jupiter',
 		orbit: {
 			elements: { a: 5.20288700, e: 0.04838624, i: 1.30439695, L: 34.39644051, ϖ: 14.72847983, Ω: 100.47390909 },
 			rates: { a: -0.00011607, e: -0.00013253, i: -0.00183714, L: 3034.74612775, ϖ: 0.21252668, Ω: 0.20469106 }
 		},
-		physical: { eqradius: 71492, siderealOrbit: 11.862615 },
+		physical: { meanRadius: 69911, equatorialRadius: 71492, siderealOrbit: 11.862615 },
 		color: 0xff9900
-	}, saturn: {
+	}, /*saturn:*/ {
 		name: 'Saturn',
 		orbit: {
 			elements: { a: 9.53667594, e: 0.05386179, i: 2.48599187, L: 49.95424423, ϖ: 92.59887831, Ω: 113.66242448 },
 			rates: { a: -0.00125060, e: -0.00050991, i: 0.00193609, L: 1222.49362201, ϖ: -0.41897216, Ω: -0.28867794 }
 		},
-		physical: { eqradius: 60268, siderealOrbit: 29.447498 },
+		physical: { meanRadius: 58232, equatorialRadius: 60268, siderealOrbit: 29.447498 },
 		color: 0xffff99
-	}, uranus: {
+	}, /*uranus:*/ {
 		name: 'Uranus',
 		orbit: {
 			elements: { a: 19.18916464, e: 0.04725744, i: 0.77263783, L: 313.23810451, ϖ: 170.95427630, Ω: 74.01692503 },
 			rates: { a: -0.00196176, e: -0.00004397, i: -0.00242939, L: 428.48202785, ϖ: 0.40805281, Ω: 0.04240589 }
 		},
-		physical: { eqradius: 25559, siderealOrbit: 84.016846 },
+		physical: { meanRadius: 25362, equatorialRadius: 25559, siderealOrbit: 84.016846 },
 		color: 0x33ffcc
-	}, neptune: {
+	}, /*neptune:*/ {
 		name: 'Neptune',
 		orbit: {
 			elements: { a: 30.06992276, e: 0.00859048, i: 1.77004347, L: -55.12002969, ϖ: 44.96476227, Ω: 131.78422574 },
 			rates: { a: 0.00026291, e: 0.00005105, i: 0.00035372, L: 218.45945325, ϖ: -0.32241464, Ω: -0.00508664 }
 		},
-		physical: { eqradius: 24764, siderealOrbit: 164.79132 },
+		physical: { meanRadius: 24622, equatorialRadius: 24764, siderealOrbit: 164.79132 },
 		color: 0x0066ff
-	}, pluto: {
+	}, /*pluto:*/ {
 		name: 'Pluto',
 		orbit: {
 			elements: { a: 39.48211675, e: 0.24882730, i: 17.14001206, L: 238.92903833, ϖ: 224.06891629, Ω: 110.30393684 },
 			rates: { a: -0.00031596, e: 0.00005170, i: 0.00004818, L: 145.20780515, ϖ: -0.04062942, Ω: -0.01183482 }
 		},
-		physical: { eqradius: 1151, siderealOrbit: 247.92065 },
+		physical: { meanRadius: 1151, equatorialRadius: 1151, siderealOrbit: 247.92065 },
 		color: 0x99ccff
 	}
-};
+];
 
 
 //TODO: remaining data set
