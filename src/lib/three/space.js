@@ -25,11 +25,11 @@ export class CelestialBody extends THREE.Mesh {
 		//this.scale.multiplyScalar(sizeScale);
 		this.setSize(sizeScale);
 	}
-	
+
 	setSize(s) {
 		this.scale.set(s, s, s);
 	}
-	
+
 	get epoch() {
 		// TODO: maybe set default value?
 		return this._epoch;
@@ -110,23 +110,49 @@ export class Stars extends THREE.PointCloud {
 	}
 }
 
+// TODO: move 
+let textureFlare0 = THREE.ImageUtils.loadTexture("jspm_packages/github/mrdoob/three.js@master/examples/textures/lensflare/lensflare0.png");
+
+//TODO: maybe add actual sun object
+export class Sun extends THREE.Object3D {
+	constructor() {
+		super();
+		
+		// TODO decribe this
+
+		let light = new THREE.PointLight(0xffffff, 1, 0);
+
+		let flareColor = new THREE.Color(0xffffff);
+		flareColor.setHSL(0.55, 0.9, 0.95);
+		let flare = new THREE.LensFlare(textureFlare0, 300, 0.0, THREE.AdditiveBlending, flareColor);
+
+		this.add(light, flare);
+	}
+}
+
+// TODO: remove
+/*
 //TODO: lens flare, and maybe actual sun object
 // SunLight really
-export class Sun extends THREE.PointLight {
+class SunLight extends THREE.PointLight {
 	constructor() {
 		//  let light = new THREE.PointLight(0xffffff, 1, 0);
 		super(0xffffff, 1, 0);
 	}
 }
 
-let textureFlare0 = THREE.ImageUtils.loadTexture("jspm_packages/github/mrdoob/three.js@master/examples/textures/lensflare/lensflare0.png");
-// TODO combine objects
-export class SunFlare extends THREE.LensFlare {
-	constructor() {
-		// todo: experiment/ describe values
-		let flareColor = new THREE.Color(0xffffff);
-		flareColor.setHSL(0.55, 0.9, 0.5 + 0.5);
 
-		super(textureFlare0, 700, 10.0, THREE.AdditiveBlending, flareColor);
+// TODO combine objects
+class SunFlare extends THREE.LensFlare {
+	constructor() {
+		// TODO: experiment/ describe values
+		let flareColor = new THREE.Color(0xffffff);
+		flareColor.setHSL(0.55, 0.9, 0.95);
+
+		super(textureFlare0, 300, 0.0, THREE.AdditiveBlending, flareColor);
+		
+		//this.customUpdateCallback = () =>{};
+		
 	}
 }
+*/

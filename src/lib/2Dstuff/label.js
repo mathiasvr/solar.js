@@ -26,7 +26,7 @@ export default class Label {
     if (position) {
       showElement(this.domElement);
       
-      // TODO: perf: should we cache width height
+      // TODO: perf: should we cache width, height
       // center text
       position.x -= this.domElement.clientWidth / 2;
       position.y -= this.domElement.clientHeight / 2;

@@ -26,8 +26,8 @@ export default class RenderCam { // TODO: rename, this is some sort of combined 
 
     // setup renderer
     
-    //todo learn about alpha
-    this.renderer = new THREE.WebGLRenderer({ antialias: false, alpha: false });
+    // TODO: learn about alpha
+    this.renderer = new THREE.WebGLRenderer({ antialias: false, alpha: true });
     this.renderer.setPixelRatio(window.devicePixelRatio);
     this.renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
     this.renderer.autoClear = false;

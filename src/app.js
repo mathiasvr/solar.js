@@ -1,13 +1,11 @@
 import THREE from 'three.js';
 import OrbitControls from 'three-orbit-controls';
-// todo is this the way?
-THREE.OrbitControls = OrbitControls(THREE);
+THREE.OrbitControls = OrbitControls(THREE); // todo is this the way?
 
 import {planetsInfo} from './lib/position/orbital-elements-data';
-
 import * as space from './lib/three/space';
-import RenderCam from './lib/three/rendercam';
 
+import RenderCam from './lib/three/rendercam';
 import Label from './lib/2Dstuff/label';
 
 // TODO: fix this poison, maybe by class
@@ -18,7 +16,7 @@ import Label from './lib/2Dstuff/label';
 let debugCount = 0, dc2 = 0;
 let lastStamp = Date.now();
 
-// TODO: try using closure instead of class, would eliminate excessive this, and wierd binding
+// TODO: try using closure instead of class, would eliminate excessive use of 'this', and wierd binding
 class App {
   constructor() {
     //function init() {
@@ -42,6 +40,7 @@ class App {
     this.controls.minDistance = 0.05; // todo: set according to target planet size
     this.controls.maxDistance = 200;
     this.controls.target = this.planets[3].position;
+  //  this.controls.target = new THREE.Vector3(0,0,0);
     //controls.addEventListener('change', function(){});
   
     this.labels = [];
@@ -59,13 +58,9 @@ class App {
     // append labels to dom
     this.labels.forEach(label => document.body.appendChild(label.domElement));
   
-    // add the good ol'sun
+    // add the sun
     let sun = new space.Sun();
     this.scene.add(sun);
-  
-    // TODO: this flare is not good boy
-    //let sunflare = new space.SunFlare();
-    //scene.add(sunflare);
 
     // add some hemisphere light, so planets are not completely black on the dark side
     let backgroundLight = new THREE.HemisphereLight(0x404040, 0x404040);
@@ -80,7 +75,6 @@ class App {
     // TODO: where does this fit in
     this.timeScaleFactor = 15 /* days per second */ * 24 * 60 * 60;
     this.currentEpoch = new Date('2015-08-05T19:00:00+0100');
-
 
   }
 
