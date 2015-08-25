@@ -71,21 +71,20 @@ function initialize() {
     
   // TODO: where does this fit in
   let timeScaleFactor = 15 /* days per second */ * 24 * 60 * 60;
-  let currentEpoch = new Date('2015-08-05T19:00:00+0100');
-  let lastStamp = Date.now();
+  let startEpoch = new Date(); //new Date('2015-08-05T19:00:00+0100');
+  let startStamp = Date.now();
+  let currentEpoch = new Date();
 
   let render = function () {
     requestAnimationFrame(render);
   
     // TODO: remove crazy limiter; how often is computation nececarry?
-    if (debugCount % 3 === 0) {
-    
+    let limit = 3;
+    if (debugCount % limit === 0) {
       // time scaling (independent of tab pausing and framerate)
-      let now = Date.now();
-      let timePassed = now - lastStamp;
-      lastStamp = now;
-
-      currentEpoch.setTime(currentEpoch.getTime() + (timePassed * timeScaleFactor));
+      let timePassed = Date.now() - startStamp;
+      
+      currentEpoch.setTime(startEpoch.getTime() + (timePassed * timeScaleFactor));
 
       planets.forEach(planet => planet.epoch = currentEpoch);
     
@@ -93,7 +92,6 @@ function initialize() {
       // planets[2].visible = false;
       // rendercam.camera.position.copy(planets[4].position);
       // rendercam.camera.lookAt(planets[8].position);
-  
    }
    
     controls.update();
@@ -101,7 +99,7 @@ function initialize() {
     rendercam.render(scene);
     
     // TODO: merge labels with planet object?
-    if (debugCount % 3 === 0) labels.forEach(label => label.update());
+    labels.forEach(label => label.update());
    
     // TODO: remove debug stuff
     // log epoch
