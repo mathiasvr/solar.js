@@ -2,12 +2,11 @@ import THREE from 'three.js';
 import OrbitControls from 'three-orbit-controls';
 THREE.OrbitControls = OrbitControls(THREE); // todo is this the way?
 
-import {planetsInfo} from './lib/position/orbital-elements-data';
-import * as space from './lib/three/space';
+import planetsInfo from './lib/position/planetaryData'; // todo: fix
 
 import RenderCam from './lib/three/rendercam';
-import Label from './lib/2Dstuff/label';
-
+import Space from './lib/three/space/';
+import Label from './lib/2D/label';
 
 // TODO: remove
 let debugCount = 0, dc2 = 0;
@@ -27,9 +26,9 @@ function initialize() {
   
   // todo
   let planetScale = 1000;
-  let planets = planetsInfo.map(planetData => new space.CelestialBody(planetData, planetScale));
+  let planets = planetsInfo.map(planetData => new Space.CelestialBody(planetData, planetScale));
 
-  let orbitLines = planetsInfo.map(planetData => new space.OrbitLine(planetData));
+  let orbitLines = planetsInfo.map(planetData => new Space.OrbitLine(planetData));
 
   let labels = planets.map(planet => new Label(planet.name, planet.position, rendercam));
   
@@ -51,7 +50,7 @@ function initialize() {
   labels.forEach(label => document.body.appendChild(label.domElement));
 
   // add the sun
-  let sun = new space.Sun();
+  let sun = new Space.Sun();
   scene.add(sun);
 
   // add some hemisphere light, so planets are not completely black on the dark side
@@ -61,7 +60,7 @@ function initialize() {
 
   // add a bunch of star particles
   //todo bad and overkill put them all on inner surface rite
-  let particles = new space.Stars(3000, 1000, 0x888888/*0xcccccc*/);
+  let particles = new Space.Stars(3000, 1000, 0x888888/*0xcccccc*/);
   scene.add(particles);
     
   // TODO: where does this fit in
@@ -119,7 +118,7 @@ function createPlanets(scale) {
   //return Object.keys(planetsInfo).map(key => new space.CelestialBody(planetsInfo[key]));
   
   // TODO: consider: cleaner with array of planetdata (values instead of keys):
-  return planetsInfo.map(planetData => new space.CelestialBody(planetData, scale));
+  return planetsInfo.map(planetData => new Space.CelestialBody(planetData, scale));
   // also look into es6 generators
 }
 

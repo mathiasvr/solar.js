@@ -37,7 +37,7 @@
 // TODO: not using equatorialRadius anymore, maybe shape planets correctly
 
 // TODO: a lot rename and shit
-export const planetsInfo = [
+export default [
 	/*reference_epoch: J2000,*/
 	/*validInterval: {
 		from: new Date('1800-01-01T00:00:00'),
@@ -117,8 +117,6 @@ export const planetsInfo = [
 		color: 0x99ccff
 	}
 ];
-
-
 
 
 // TODO: try remaining data set
