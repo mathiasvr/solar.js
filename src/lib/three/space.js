@@ -10,23 +10,22 @@ Date.prototype.addDays = function (days) {
 }
 
 const KM_PER_AU = 149597870.7;
-const SCALE = 1; // TODO: getting ready to remove scaling, but test if it is precise enough to use AU
+const SCALE = 1; // TODO: getting ready to remove scaling, but check if it is precise enough to use AU
 		
 export class CelestialBody extends THREE.Mesh {
 	constructor(planetData, scale) {
 		let radius = (planetData.physical.meanRadius * SCALE /* * sizeScale */) / KM_PER_AU; // TODO: less hacky
-		console.log(planetData.name + ' radius: ' + radius); // TODO: DON'T DEBUG LOG AND sheet though
+		console.log(planetData.name + ' radius: ' + radius); // TODO: remove
 		
 		super(new THREE.SphereGeometry(radius, 32, 24), new THREE.MeshPhongMaterial({ color: planetData.color, wireframe: false }));
 
 		this.planetData = planetData;
 		
-		//this.scale.multiplyScalar(sizeScale);
 		this.setScale(scale);
 	}
 
-	setScale(s) {
-		this.scale.set(s, s, s);
+	setScale(value) {
+		this.scale.set(value, value, value);
 	}
 
 	get epoch() {
@@ -35,9 +34,9 @@ export class CelestialBody extends THREE.Mesh {
 	}
 	
 	// set position from epoch
-	set epoch(value) {
-		this._epoch = value;
-		let elements = OrbitalElements.compute(this.planetData.orbit, value);
+	set epoch(epoch) {
+		this._epoch = epoch;
+		let elements = OrbitalElements.compute(this.planetData.orbit, epoch);
 
 		// TODO this is pretty hacky since helposition is NOT Vector3
 		this.position.copy(elements.helposition);
@@ -46,15 +45,13 @@ export class CelestialBody extends THREE.Mesh {
 		this.position.multiplyScalar(SCALE);
 	}
 	
-	// TODO remove this
-	getOrbitLine() {
-		return new OrbitLine(this.planetData);
+	get name() {
+		return this.planetData.name;
 	}
 
 }
 
 export class OrbitLine extends THREE.Line {
-	
 		// orbit a sidereal year from J2000
 	constructor(planetData) {
 		// TODO: use some sort of spline ellipsis thing, instead off many lines
@@ -112,46 +109,43 @@ export class Stars extends THREE.PointCloud {
 // TODO: move 
 let textureFlare0 = THREE.ImageUtils.loadTexture("jspm_packages/github/mrdoob/three.js@master/examples/textures/lensflare/lensflare0.png");
 
-//TODO: maybe add actual sun object
+//TODO: maybe add actual sun mesh object
 export class Sun extends THREE.Object3D {
 	constructor() {
 		super();
+
+		// light source of the sun
+		let light = new THREE.PointLight(0xffffff);
 		
-		// TODO decribe this
-
-		let light = new THREE.PointLight(0xffffff, 1, 0);
-
+		// lens flare effect to represent the sun
 		let flareColor = new THREE.Color(0xffffff);
 		flareColor.setHSL(0.55, 0.9, 0.95);
-		let flare = new THREE.LensFlare(textureFlare0, 300, 0.0, THREE.AdditiveBlending, flareColor);
+		let flare = new THREE.LensFlare(textureFlare0, 300, 0, THREE.AdditiveBlending, flareColor);
+
+		// TODO: adjust flare size based on camera distance, how does positionScreen work is it based on camera?
+		/*flare.customUpdateCallback = function () {
+			var f, fl = this.lensFlares.length;
+			var flare;
+			//var vecX = - this.positionScreen.x * 2;
+			//var vecY = - this.positionScreen.y * 2;
+			
+			//console.log(this.positionScreen, this.lensFlares[0].size);
+			//console.log(1-this.positionScreen.z);
+
+			for (f = 0; f < fl; f++) {
+				flare = this.lensFlares[f];
+				
+				//flare.size += 1;
+				
+				flare.x = this.positionScreen.x; //+ vecX * flare.distance;
+				flare.y = this.positionScreen.y; //+ vecY * flare.distance;
+
+				flare.wantedRotation = flare.x * Math.PI * 0.25;
+				flare.rotation += (flare.wantedRotation - flare.rotation) * 0.25;
+			}
+			
+		};*/
 
 		this.add(light, flare);
 	}
 }
-
-// TODO: remove
-/*
-//TODO: lens flare, and maybe actual sun object
-// SunLight really
-class SunLight extends THREE.PointLight {
-	constructor() {
-		//  let light = new THREE.PointLight(0xffffff, 1, 0);
-		super(0xffffff, 1, 0);
-	}
-}
-
-
-// TODO combine objects
-class SunFlare extends THREE.LensFlare {
-	constructor() {
-		// TODO: experiment/ describe values
-		let flareColor = new THREE.Color(0xffffff);
-		flareColor.setHSL(0.55, 0.9, 0.95);
-
-		super(textureFlare0, 300, 0.0, THREE.AdditiveBlending, flareColor);
-		
-		//this.customUpdateCallback = () =>{};
-		
-	}
-}
-*/

@@ -8,53 +8,48 @@ import * as space from './lib/three/space';
 import RenderCam from './lib/three/rendercam';
 import Label from './lib/2Dstuff/label';
 
-// TODO: fix this poison, maybe by class
-//let scene, rendercam, planets, controls;
-//let labels = [];
 
-// TODO: MOVE
+// TODO: remove
 let debugCount = 0, dc2 = 0;
+
 
 function initialize() {
   // create the scene
   let scene = new THREE.Scene();
 
+  // TODO: better structure for camera and renders
   // setup renderer
   let rendercam = new RenderCam();
 
-  scene.add(rendercam.cameraHelper); // TODO: this might be a bit transparent
+  scene.add(rendercam.cameraHelper); // TODO: this is very
     
   document.body.appendChild(rendercam.renderer.domElement);
   
   // todo
   let planetScale = 1000;
-  let planets = createPlanets(planetScale);
+  let planets = planetsInfo.map(planetData => new space.CelestialBody(planetData, planetScale));
 
+  let orbitLines = planetsInfo.map(planetData => new space.OrbitLine(planetData));
+
+  let labels = planets.map(planet => new Label(planet.name, planet.position, rendercam));
+  
   // set up camera control	
   let controls = new THREE.OrbitControls(rendercam.camera);
   controls.noPan = true;
   controls.zoomSpeed = 0.5;
   controls.minDistance = 0.05; // todo: set according to target planet size
   controls.maxDistance = 200;
-  controls.target = planets[3].position;
-  //  controls.target = new THREE.Vector3(0,0,0);
+  //controls.target = planets[3].position;
+  controls.target = new THREE.Vector3(0, 0, 0);
   //controls.addEventListener('change', function(){});
-  
-  let labels = [];
-  
-  // add planets and orbit path
-  // todo: and label
-  //for (let planet of planets) {
-  planets.forEach(planet => {
-    scene.add(planet);
-    scene.add(planet.getOrbitLine());
-    labels.push(new Label(planet.planetData.name, planet.position, rendercam));
-  });
-  
+ 
+  // add planets and orbits to scene
+  scene.add(...planets, ...orbitLines);
+
   // TODO: make object that combine planets and labels i guess
   // append labels to dom
   labels.forEach(label => document.body.appendChild(label.domElement));
-  
+
   // add the sun
   let sun = new space.Sun();
   scene.add(sun);
@@ -83,7 +78,7 @@ function initialize() {
     if (debugCount % limit === 0) {
       // time scaling (independent of tab pausing and framerate)
       let timePassed = Date.now() - startStamp;
-      
+
       currentEpoch.setTime(startEpoch.getTime() + (timePassed * timeScaleFactor));
 
       planets.forEach(planet => planet.epoch = currentEpoch);
@@ -92,10 +87,10 @@ function initialize() {
       // planets[2].visible = false;
       // rendercam.camera.position.copy(planets[4].position);
       // rendercam.camera.lookAt(planets[8].position);
-   }
-   
+    }
+
     controls.update();
-   
+
     rendercam.render(scene);
     
     // TODO: merge labels with planet object?
@@ -105,7 +100,7 @@ function initialize() {
     // log epoch
     if (debugCount % 120 === 0) { console.log('epoch', currentEpoch); }
     // planet switcher
-    if (debugCount % 600 === 0) { controls.target = planets[dc2++ % 9].position; }
+    // if (debugCount % 600 === 0) { controls.target = planets[dc2++ % 9].position; }
     debugCount++;
   }
 
@@ -113,8 +108,8 @@ function initialize() {
 }
 
 
-
 // TODO where does this really belong
+// TODO: READY FOR REMOVAL
 function createPlanets(scale) {
   // for (let planetData in planetsInfo) {
   // 	let planetData = planetsInfo[property];
