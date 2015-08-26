@@ -1,6 +1,6 @@
 import THREE from 'three.js';
 // TODO: maybe separate this from the mesh class (but then maybe not)
-import OrbitalElements from '../../position/orbitalClass';
+import OrbitalElements from '../../position/orbital-elements';
 
 const KM_PER_AU = 149597870.7;
 const SCALE = 1; // TODO: getting ready to remove scaling, but check if it is precise enough to use AU

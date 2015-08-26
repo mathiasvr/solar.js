@@ -2,10 +2,11 @@ import THREE from 'three.js';
 import OrbitControls from 'three-orbit-controls';
 THREE.OrbitControls = OrbitControls(THREE); // todo is this the way?
 
-import planetsInfo from './lib/position/planetaryData'; // todo: fix
+import planetsInfo from './lib/position/planetary-data'; // todo: fix
 
 import RenderCam from './lib/three/rendercam';
-import Space from './lib/three/space/';
+import * as Space from './lib/three/space/';
+
 import Label from './lib/2D/label';
 
 // TODO: remove

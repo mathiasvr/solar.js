@@ -1,3 +1,5 @@
+// TODO FIX ALL THIS
+
 import Position from './position';
 
 function toEpoch(date) {
