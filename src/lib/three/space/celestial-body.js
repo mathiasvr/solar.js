@@ -1,6 +1,6 @@
 import THREE from 'three.js';
 // TODO: maybe separate this from the mesh class (but then maybe not)
-import OrbitalElements from '../../position/orbital-elements';
+import * as OrbitalElements from '../../position/orbital-elements';
 import Positions from '../../position/position';
 
 const KM_PER_AU = 149597870.7;
@@ -8,7 +8,10 @@ const SCALE = 1; // TODO: getting ready to remove scaling, but check if it is pr
 		
 export default class CelestialBody extends THREE.Mesh {
 	constructor(planetData, scale) {
+		//constructor(name, radius, orbit, color, scale) {
+			
 		let radius = (planetData.physical.meanRadius * SCALE /* * sizeScale */) / KM_PER_AU; // TODO: less hacky
+		
 		console.log(planetData.name + ' radius: ' + radius); // TODO: remove
 		
 		super(new THREE.SphereGeometry(radius, 32, 24), new THREE.MeshPhongMaterial({ color: planetData.color, wireframe: false }));

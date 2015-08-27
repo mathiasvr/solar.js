@@ -1,6 +1,6 @@
 import THREE from 'three.js';
 // TODO: maybe separate this from the mesh class (but then maybe not)
-import OrbitalElements from '../../position/orbital-elements';
+import * as OrbitalElements from '../../position/orbital-elements';
 import Positions from '../../position/position';
 
 // TODO: a lot of code is identical with celesial-body, can this be shared better
