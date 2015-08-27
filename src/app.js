@@ -12,7 +12,6 @@ import Label from './lib/2D/label';
 // TODO: remove
 let debugCount = 0, dc2 = 0;
 
-
 function initialize() {
   // create the scene
   let scene = new THREE.Scene();
@@ -69,19 +68,22 @@ function initialize() {
   let startEpoch = new Date(); //new Date('2015-08-05T19:00:00+0100');
   let startStamp = Date.now();
   let currentEpoch = new Date();
+  
+  let infoDiv = document.getElementById('info');
 
   let render = function () {
     requestAnimationFrame(render);
   
     // TODO: remove crazy limiter; how often is computation nececarry?
-    let limit = 3;
-    if (debugCount % limit === 0) {
+    if (debugCount % 3 === 0) {
       // time scaling (independent of tab pausing and framerate)
       let timePassed = Date.now() - startStamp;
 
       currentEpoch.setTime(startEpoch.getTime() + (timePassed * timeScaleFactor));
 
       planets.forEach(planet => planet.epoch = currentEpoch);
+      
+      infoDiv.textContent = 'Date: ' + currentEpoch.toLocaleString();
     
       // from earth to mars test dont use with orbitcontrols
       // planets[2].visible = false;
@@ -95,10 +97,10 @@ function initialize() {
     
     // TODO: merge labels with planet object?
     labels.forEach(label => label.update());
-   
+      
     // TODO: remove debug stuff
     // log epoch
-    if (debugCount % 120 === 0) { console.log('epoch', currentEpoch); }
+    //if (debugCount % 120 === 0) { console.log('epoch', currentEpoch); }
     // planet switcher
     // if (debugCount % 600 === 0) { controls.target = planets[dc2++ % 9].position; }
     debugCount++;
