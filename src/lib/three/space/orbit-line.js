@@ -1,6 +1,9 @@
 import THREE from 'three.js';
 // TODO: maybe separate this from the mesh class (but then maybe not)
 import OrbitalElements from '../../position/orbital-elements';
+import Positions from '../../position/position';
+
+// TODO: a lot of code is identical with celesial-body, can this be shared better
 
 // TODO: remove (we need general solution anyway)
 Date.prototype.addDays = function (days) {
@@ -23,8 +26,10 @@ export default class OrbitLine extends THREE.Line {
 
 		for (let i = 0, j = 0; i < precision; i += 1, j += unit) {
 			let elements = OrbitalElements.compute(planetData.orbit, OrbitalElements.J2000.addDays(j));
+			let positions = Positions(elements);
+			
 			let vertex = new THREE.Vector3();
-			vertex.copy(elements.helposition); // TODO: not vector3 hack (maybe make own (safe) copy/convert)
+			vertex.copy(positions.eclipticPosition); // TODO: not vector3 hack (maybe make own (safe) copy/convert)
 			//vertex.multiplyScalar(SCALE); //todo remove scaling
 			geometry.vertices.push(vertex);
 		}
