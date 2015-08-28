@@ -31,6 +31,9 @@ export default class Label {
       position.x -= this.domElement.clientWidth / 2;
       position.y -= this.domElement.clientHeight / 2;
 
+      // TODO: this is a bit static: push text a little up
+      position.y -= 10;
+
       this.domElement.style.left = position.x + 'px';
       this.domElement.style.top = position.y + 'px';
     } else {

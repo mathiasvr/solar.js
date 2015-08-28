@@ -7,16 +7,19 @@ const KM_PER_AU = 149597870.7;
 const SCALE = 1; // TODO: getting ready to remove scaling, but check if it is precise enough to use AU
 		
 export default class CelestialBody extends THREE.Mesh {
-	constructor(planetData, scale) {
-		//constructor(name, radius, orbit, color, scale) {
+	// TODO: find a way to convinietly conncet all planetData and this body, redesign class i guess
+	//constructor(planetData, scale) {
+	constructor(name, physical, orbit, color, scale) {
 			
-		let radius = (planetData.physical.meanRadius * SCALE /* * sizeScale */) / KM_PER_AU; // TODO: less hacky
+		let radius = (physical.meanRadius * SCALE /* * sizeScale */) / KM_PER_AU; // TODO: less hacky
 		
-		console.log(planetData.name + ' radius: ' + radius); // TODO: remove
-		
-		super(new THREE.SphereGeometry(radius, 32, 24), new THREE.MeshPhongMaterial({ color: planetData.color, wireframe: false }));
+		super(new THREE.SphereGeometry(radius, 32, 24), new THREE.MeshPhongMaterial({ color: color, wireframe: false }));
 
-		this.planetData = planetData;
+		console.log(name + ' radius:', this.geometry.parameters.radius); // TODO: remove
+	
+		this.name = name;
+		this.orbit = orbit;
+		this.physical = physical;
 		
 		this.setScale(scale);
 	}
@@ -33,7 +36,7 @@ export default class CelestialBody extends THREE.Mesh {
 	// set position from epoch
 	set epoch(epoch) {
 		this._epoch = epoch;
-		let elements = OrbitalElements.compute(this.planetData.orbit, epoch);
+		let elements = OrbitalElements.compute(this.orbit, epoch);
 		let positions = Positions(elements);
 
 		// TODO this is pretty hacky since helposition is NOT Vector3
@@ -43,8 +46,9 @@ export default class CelestialBody extends THREE.Mesh {
 		this.position.multiplyScalar(SCALE);
 	}
 	
-	get name() {
-		return this.planetData.name;
+	// TODO: you gotta love this
+	get radius() {
+		return this.geometry.parameters.radius * this.scale.x;
 	}
 
 }
