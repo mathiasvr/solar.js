@@ -91,7 +91,7 @@ function initialize() {
 
     // only update if planets have moved substansiously
     // TODO: optimize (sidereal) how much time must pass before movement is necessary for the individual planet
-    if (timePassed - last > 50) {
+    if (timePassed - last > 40) {
       currentEpoch.setTime(startEpoch.getTime() + (timePassed * timeScaleFactor));
 
       planets.forEach(planet => planet.epoch = currentEpoch);

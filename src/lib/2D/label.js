@@ -48,13 +48,10 @@ function getScreenCoordinates(positon, camera, width, height) {
 
   // map to normalized device coordinate (NDC) space
   vector.project(camera);
-
-  // TODO: rounding makes labels wiggle :p, but maybe crazy precision is fine.
-  // check if this is still an issue when the render limiter has been removed
   
   // map to 2D screen space
-  vector.x = /*Math.round*/((vector.x + 1) * width / 2),
-  vector.y = /*Math.round*/((- vector.y + 1) * height / 2);
+  vector.x = Math.round((vector.x + 1) * width / 2),
+  vector.y = Math.round((-vector.y + 1) * height / 2);
   //vector.z = 0;
 
   // TODO: remove z hack, detect if camera is facing away from object
